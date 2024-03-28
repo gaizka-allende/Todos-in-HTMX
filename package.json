@@ -4,7 +4,11 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.8.2",
-    "hono": "^4.1.3"
+    "axios": "^1.6.8",
+    "hono": "^4.1.3",
+    "playwright": "^1.42.1",
+    "user-agents": "^1.1.150",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",

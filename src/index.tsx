@@ -1,6 +1,5 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import type { FC } from "hono/jsx";
 import { logger } from "hono/logger";
 import { JSONFilePreset } from "lowdb/node";
 
@@ -11,27 +10,6 @@ import { renderer, AddTodo, Item } from "./components";
   app.use(logger());
 
   const db = await JSONFilePreset("db.json", { todos: [] });
-
-  const Layout: FC = (props) => {
-    return (
-      <html>
-        <body>{props.children}</body>
-      </html>
-    );
-  };
-
-  const Top: FC<{ messages: string[] }> = (props: { messages: string[] }) => {
-    return (
-      <Layout>
-        <h1>Hello Hono!</h1>
-        <ul>
-          {props.messages.map((message) => {
-            return <li>{message}!!</li>;
-          })}
-        </ul>
-      </Layout>
-    );
-  };
 
   app.get("*", renderer);
 
@@ -70,8 +48,8 @@ import { renderer, AddTodo, Item } from "./components";
       const formData = await c.req.formData();
       const title = formData.get("title");
       //const { title } = c.req.valid("form");
-      console.log(title);
-      const id = crypto.randomUUID();
+      //console.log(title);
+      //const id = crypto.randomUUID();
       //await c.env.DB.prepare(`INSERT INTO todo(id, title) VALUES(?, ?);`)
       //.bind(id, title)
       //.run();
@@ -82,16 +60,24 @@ import { renderer, AddTodo, Item } from "./components";
         completed: false,
       });
       await db.write();
-      return c.html(<Item title={title} id={id} />);
+      return c.html(<Item title={title} id={lastId} />);
     }
   );
 
-  //app.delete("/todo/:id", async (c) => {
-  //const id = c.req.param("id");
-  //await c.env.DB.prepare(`DELETE FROM todo WHERE id = ?;`).bind(id).run();
-  //c.status(200);
-  //return c.body(null);
-  //});
+  app.delete("/todo/:id", async (c) => {
+    const id = c.req.param("id");
+    //await c.env.DB.prepare(`DELETE FROM todo WHERE id = ?;`).bind(id).run();
+    //console.log(db.data.todos.filter((todo) => todo.id !== Number(id)));
+    //await db.update(({ todos }) => {
+    //console.log(todos.filter((todo) => todo.id !== Number(id)));
+    //return todos.filter((todo) => todo.id !== Number(id));
+    //});
+    db.data.todos = db.data.todos.filter((todo) => todo.id !== Number(id));
+    await db.write();
+
+    c.status(200);
+    return c.body(null);
+  });
 
   const port = 3000;
   console.log(`Server is running on port ${port}`);

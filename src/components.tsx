@@ -47,12 +47,20 @@ export const AddTodo = () => (
 );
 
 export const Item = ({ title, id }: { title: string; id: string }) => (
-  <p
-    hx-delete={`/todo/${id}`}
-    hx-swap="outerHTML"
-    class="flex row items-center justify-between py-1 px-4 my-1 rounded-lg text-lg border bg-gray-100 text-gray-600 mb-2"
-  >
-    {title}
-    <button class="font-medium">Delete</button>
-  </p>
+  <div class="flex row items-center justify-between   mb-2">
+    <input
+      id={id}
+      class="font-medium py-1 px-4 my-1 rounded-lg text-lg border bg-gray-100 text-gray-600"
+      value={title}
+      hx-put={`/todo/${id}`}
+    />
+    <button
+      class="font-medium "
+      hx-delete={`/todo/${id}`}
+      hx-swap="outerHTML"
+      hx-target="previous input"
+    >
+      Delete
+    </button>
+  </div>
 );

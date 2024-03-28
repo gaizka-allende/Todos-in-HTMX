@@ -1,0 +1,298 @@
+[
+  {
+    "code": "al",
+    "iso3code": "ALB",
+    "name": "Albania",
+    "currency": "EUR",
+    "defaultAirportCode": "STN",
+    "schengen": false
+  },
+  {
+    "code": "at",
+    "iso3code": "AUT",
+    "name": "Austria",
+    "currency": "EUR",
+    "defaultAirportCode": "VIE",
+    "schengen": true
+  },
+  {
+    "code": "ba",
+    "iso3code": "BIH",
+    "name": "Bosnia & Herzegovina",
+    "currency": "EUR",
+    "defaultAirportCode": "BNX",
+    "schengen": false
+  },
+  {
+    "code": "be",
+    "iso3code": "BEL",
+    "name": "Belgium",
+    "currency": "EUR",
+    "defaultAirportCode": "BRU",
+    "schengen": true
+  },
+  {
+    "code": "bg",
+    "iso3code": "BGR",
+    "name": "Bulgaria",
+    "currency": "EUR",
+    "defaultAirportCode": "PDV",
+    "schengen": false
+  },
+  {
+    "code": "ch",
+    "iso3code": "CHE",
+    "name": "Switzerland",
+    "currency": "CHF",
+    "defaultAirportCode": "BSL",
+    "schengen": true
+  },
+  {
+    "code": "cy",
+    "iso3code": "CYP",
+    "name": "Cyprus",
+    "currency": "EUR",
+    "defaultAirportCode": "PFO",
+    "schengen": false
+  },
+  {
+    "code": "cz",
+    "iso3code": "CZE",
+    "name": "Czech Republic",
+    "currency": "CZK",
+    "defaultAirportCode": "PRG",
+    "schengen": true
+  },
+  {
+    "code": "de",
+    "iso3code": "DEU",
+    "name": "Germany",
+    "currency": "EUR",
+    "defaultAirportCode": "HHN",
+    "schengen": true
+  },
+  {
+    "code": "dk",
+    "iso3code": "DNK",
+    "name": "Denmark",
+    "currency": "DKK",
+    "defaultAirportCode": "BLL",
+    "schengen": true
+  },
+  {
+    "code": "ee",
+    "iso3code": "EST",
+    "name": "Estonia",
+    "currency": "EUR",
+    "defaultAirportCode": "TLL",
+    "schengen": true
+  },
+  {
+    "code": "es",
+    "iso3code": "ESP",
+    "name": "Spain",
+    "currency": "EUR",
+    "defaultAirportCode": "BCN",
+    "schengen": true
+  },
+  {
+    "code": "fi",
+    "iso3code": "FIN",
+    "name": "Finland",
+    "currency": "EUR",
+    "defaultAirportCode": "TMP",
+    "schengen": true
+  },
+  {
+    "code": "fr",
+    "iso3code": "FRA",
+    "name": "France",
+    "currency": "EUR",
+    "defaultAirportCode": "BVA",
+    "schengen": true
+  },
+  {
+    "code": "gb",
+    "iso3code": "GBR",
+    "name": "United Kingdom",
+    "currency": "GBP",
+    "defaultAirportCode": "STN",
+    "schengen": false
+  },
+  {
+    "code": "gr",
+    "iso3code": "GRC",
+    "name": "Greece",
+    "currency": "EUR",
+    "defaultAirportCode": "ATH",
+    "schengen": true
+  },
+  {
+    "code": "hr",
+    "iso3code": "HRV",
+    "name": "Croatia",
+    "currency": "EUR",
+    "defaultAirportCode": "ZAD",
+    "schengen": true
+  },
+  {
+    "code": "hu",
+    "iso3code": "HUN",
+    "name": "Hungary",
+    "currency": "HUF",
+    "defaultAirportCode": "BUD",
+    "schengen": true
+  },
+  {
+    "code": "ie",
+    "iso3code": "IRL",
+    "name": "Ireland",
+    "currency": "EUR",
+    "defaultAirportCode": "DUB",
+    "schengen": false
+  },
+  {
+    "code": "il",
+    "iso3code": "ISR",
+    "name": "Israel",
+    "currency": "EUR",
+    "defaultAirportCode": "VDA",
+    "schengen": false
+  },
+  {
+    "code": "it",
+    "iso3code": "ITA",
+    "name": "Italy",
+    "currency": "EUR",
+    "defaultAirportCode": "BGY",
+    "schengen": true
+  },
+  {
+    "code": "jo",
+    "iso3code": "JOR",
+    "name": "Jordan",
+    "currency": "EUR",
+    "defaultAirportCode": "AMM",
+    "schengen": false
+  },
+  {
+    "code": "lt",
+    "iso3code": "LTU",
+    "name": "Lithuania",
+    "currency": "EUR",
+    "defaultAirportCode": "KUN",
+    "schengen": true
+  },
+  {
+    "code": "lu",
+    "iso3code": "LUX",
+    "name": "Luxembourg",
+    "currency": "EUR",
+    "defaultAirportCode": "STN",
+    "schengen": true
+  },
+  {
+    "code": "lv",
+    "iso3code": "LVA",
+    "name": "Latvia",
+    "currency": "EUR",
+    "defaultAirportCode": "RIX",
+    "schengen": true
+  },
+  {
+    "code": "ma",
+    "iso3code": "MAR",
+    "name": "Morocco",
+    "currency": "MAD",
+    "defaultAirportCode": "FEZ",
+    "schengen": false
+  },
+  {
+    "code": "me",
+    "iso3code": "MNE",
+    "name": "Montenegro",
+    "currency": "EUR",
+    "defaultAirportCode": "TGD",
+    "schengen": false
+  },
+  {
+    "code": "mt",
+    "iso3code": "MLT",
+    "name": "Malta",
+    "currency": "EUR",
+    "defaultAirportCode": "MLA",
+    "schengen": true
+  },
+  {
+    "code": "nl",
+    "iso3code": "NLD",
+    "name": "Netherlands",
+    "currency": "EUR",
+    "defaultAirportCode": "EIN",
+    "schengen": true
+  },
+  {
+    "code": "no",
+    "iso3code": "NOR",
+    "name": "Norway",
+    "currency": "NOK",
+    "defaultAirportCode": "RYG",
+    "schengen": true
+  },
+  {
+    "code": "pl",
+    "iso3code": "POL",
+    "name": "Poland",
+    "currency": "PLN",
+    "defaultAirportCode": "WMI",
+    "schengen": true
+  },
+  {
+    "code": "pt",
+    "iso3code": "PRT",
+    "name": "Portugal",
+    "currency": "EUR",
+    "defaultAirportCode": "LIS",
+    "schengen": true
+  },
+  {
+    "code": "ro",
+    "iso3code": "ROU",
+    "name": "Romania",
+    "currency": "EUR",
+    "defaultAirportCode": "OTP",
+    "schengen": false
+  },
+  {
+    "code": "rs",
+    "iso3code": "SRB",
+    "name": "Serbia",
+    "currency": "EUR",
+    "defaultAirportCode": "STN",
+    "schengen": false
+  },
+  {
+    "code": "se",
+    "iso3code": "SWE",
+    "name": "Sweden",
+    "currency": "SEK",
+    "defaultAirportCode": "NYO",
+    "schengen": true
+  },
+  {
+    "code": "sk",
+    "iso3code": "SVK",
+    "name": "Slovakia",
+    "currency": "EUR",
+    "defaultAirportCode": "BTS",
+    "schengen": true
+  },
+  {
+    "code": "tr",
+    "iso3code": "TUR",
+    "name": "Turkey",
+    "currency": "EUR",
+    "defaultAirportCode": "DLM",
+    "schengen": false
+  }
+]
