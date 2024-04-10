@@ -4,6 +4,7 @@ import { logger } from "hono/logger";
 import { JSONFilePreset } from "lowdb/node";
 
 import { renderer, AddTodo, Item } from "./components";
+import { timer } from "./utils";
 
 (async () => {
   const app = new Hono();
@@ -14,22 +15,27 @@ import { renderer, AddTodo, Item } from "./components";
   app.get("*", renderer);
 
   app.get("/", async (c) => {
-    //return c.text("Hello Hono!");
-    //const messages = ["Good Mornings", "Good Evening", "Good Night"];
-    //return c.html(<Top messages={messages} />);
-    //return c.render(<Top messages={messages} />);
-
-    //const { results } = await c.env.DB.prepare(`SELECT id, title FROM todo;`).all<Todo>()
-
-    //const todos = results
+    //console.log(db.data.todos.filter(({ completed }) => completed === true));
     return c.render(
-      <div>
+      <>
+        <div id="done">
+          {db.data.todos.filter(({ completed }) => completed === true).length}{" "}
+          done
+        </div>
         <AddTodo />
-        {db.data.todos.map((todo) => {
-          return <Item title={todo.title} id={todo.id} />;
-        })}
-        <div id="todo"></div>
-      </div>
+        <div id="todos">
+          {db.data.todos.map((todo) => {
+            return (
+              <Item title={todo.title} id={todo.id} checked={todo.completed} />
+            );
+          })}
+        </div>
+        <div
+          id="adding-item"
+          role="status"
+          class="transition-[display] ease-in hidden max-w-sm animate-pulse h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"
+        ></div>
+      </>
     );
   });
 
@@ -49,34 +55,66 @@ import { renderer, AddTodo, Item } from "./components";
       const title = formData.get("title");
       //const { title } = c.req.valid("form");
       //console.log(title);
-      //const id = crypto.randomUUID();
-      //await c.env.DB.prepare(`INSERT INTO todo(id, title) VALUES(?, ?);`)
-      //.bind(id, title)
-      //.run();
-      const lastId = Number(db.data.todos.slice(-1)[0].id);
+      const id = crypto.randomUUID();
       db.data.todos.push({
-        id: lastId + 1,
+        id,
         title,
         completed: false,
       });
       await db.write();
-      return c.html(<Item title={title} id={lastId} />);
+      await timer(5);
+      return c.html(
+        <>
+          <div id="done" hx-swap-oob="true">
+            {db.data.todos.filter(({ completed }) => completed === true).length}{" "}
+            done
+          </div>
+          <Item title={title} id={id} checked={false} />
+        </>
+      );
     }
   );
 
   app.delete("/todo/:id", async (c) => {
     const id = c.req.param("id");
-    //await c.env.DB.prepare(`DELETE FROM todo WHERE id = ?;`).bind(id).run();
-    //console.log(db.data.todos.filter((todo) => todo.id !== Number(id)));
-    //await db.update(({ todos }) => {
-    //console.log(todos.filter((todo) => todo.id !== Number(id)));
-    //return todos.filter((todo) => todo.id !== Number(id));
-    //});
-    db.data.todos = db.data.todos.filter((todo) => todo.id !== Number(id));
+    db.data.todos = db.data.todos.filter((todo) => todo.id !== id);
     await db.write();
 
     c.status(200);
-    return c.body(null);
+    return c.body(
+      <>
+        <div id="done" hx-swap-oob="true">
+          {db.data.todos.filter(({ completed }) => completed === true).length}{" "}
+          done
+        </div>
+      </>
+    );
+  });
+
+  app.patch("/todo/:id", async (c) => {
+    const id = c.req.param("id");
+    const formData = await c.req.formData();
+    //console.log(formData);
+    const checkbox = formData.get("checkbox");
+    const title = formData.get("title");
+    //console.log(id, title, checkbox);
+    const todo = db.data.todos.find((todo) => todo.id === id);
+
+    db.data.todos = [
+      ...db.data.todos.filter((todo) => todo.id !== id),
+      { ...todo, title, completed: checkbox === "on" },
+    ];
+    await db.write();
+    c.status(200);
+    return c.body(
+      <>
+        <div id="done" hx-swap-oob="true">
+          {db.data.todos.filter(({ completed }) => completed === true).length}{" "}
+          done
+        </div>
+        <Item title={title} id={id} checked={checkbox === "on"} />
+      </>
+    );
   });
 
   const port = 3000;
