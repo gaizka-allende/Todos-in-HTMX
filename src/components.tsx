@@ -12,16 +12,17 @@ export const renderer = jsxRenderer(({ children }) => {
         <script src="https://cdn.tailwindcss.com"></script>
         <title>Hono + htmx</title>
         <style>
-          #adding-item.htmx-request{
+          #adding-item.htmx-request {
             display: flex;
           }
         </style>
       </head>
       <body>
-        <div class="p-4">
-          <h1 class="text-4xl font-bold mb-4"><a href="/">Todo</a></h1>
-            ${children}
-          </form>
+        <div
+          id="screen"
+          class="mt-[50px] lg:mt-[100px] mb-0 mx-auto md:w-[450px]"
+        >
+          ${children}
         </div>
       </body>
     </html>
