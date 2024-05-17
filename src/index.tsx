@@ -4,6 +4,7 @@ import { createMiddleware } from "hono/factory";
 import { JSONFilePreset } from "lowdb/node";
 import { HTTPException } from "hono/http-exception";
 import { setSignedCookie, getSignedCookie } from "hono/cookie";
+import { add, isBefore } from "date-fns";
 
 import { renderer } from "./components/renderer";
 import { LoginForm } from "./components/LoginForm";
@@ -17,28 +18,46 @@ const Auth = createMiddleware(async (c, next) => {
   if (session) {
     const [username, sessionDateTimestamp] = session.split(",");
     const sessionDate = new Date(parseInt(sessionDateTimestamp));
-    console.log(username, sessionDate);
+    if (isBefore(add(sessionDate, { minutes: 5 }), new Date())) {
+      // session expires after 5 minutes
+      // redirect to login screen
+      console.log("session expired");
+      return c.redirect("/login");
+    }
+    console.log("session is valid (not expired)");
     c.set("username", username);
     c.set("sessionDate", sessionDate);
+    if (c.req.path === "/login") {
+      // session is valid so redirect to todos if user tries to access login page
+      c.res.headers.set("HX-Redirect", "/todos");
+      return c.render(<Todos todos={[]} />);
+      //return c.redirect("/login");
+    }
     await next();
     return;
   }
   console.log("no session cookie");
-  if (c.req.method === "GET") {
-    if (c.req.path !== "/") {
-      return c.redirect("/");
-    }
-  } else {
-    if (c.req.path !== "/login") {
-      const res = new Response("Unauthorized", {
-        status: 401,
-        headers: {
-          //...
-        },
-      });
-      throw new HTTPException(400, { res });
-    }
+  //if (c.req.path === "/" || c.req.path === "/login") {
+  if (c.req.path === "/login") {
+    await next();
+    return;
   }
+  //if (c.req.method === "GET") {
+  //if (c.req.path !== "/") {
+  //return c.redirect("/");
+  //}
+  //}
+  //  if (c.req.path !== "/login") {
+  //const res = new Response("Unauthorized", {
+  //status: 401,
+  //headers: {
+  ////...
+  //},
+  //});
+  //throw new HTTPException(400, { res });
+  // }
+
+  return c.redirect("/login");
   await next();
 });
 
@@ -61,7 +80,7 @@ interface Login {
 
   app.get("*", renderer);
 
-  app.get("/", async (c) => {
+  app.get("/login", async (c) => {
     return c.render(<LoginForm />);
   });
 
@@ -83,6 +102,7 @@ interface Login {
       //const json = await c.req.json();
       //console.log(json);
       //console.log(c.req.parseBody());
+
       const formData = await c.req.formData();
       const username = formData.get("username");
       const password = formData.get("password");
@@ -106,7 +126,7 @@ interface Login {
       });
 
       if (!db.data.todos[username]) db.data.todos[username] = [];
-      c.res.headers.set("Location", "/todos");
+      c.res.headers.set("HX-Redirect", "/todos");
       return c.render(<Todos todos={db.data.todos[username]} />);
 
       //const { title } = c.req.valid("form");
