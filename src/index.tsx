@@ -22,16 +22,24 @@ const Auth = createMiddleware(async (c, next) => {
       // session expires after 5 minutes
       // redirect to login screen
       console.log("session expired");
-      return c.redirect("/login");
+      if (c.req.path !== "/login") {
+        return c.redirect("/login");
+      }
+
+      await next();
+      return;
     }
     console.log("session is valid (not expired)");
     c.set("username", username);
     c.set("sessionDate", sessionDate);
     if (c.req.path === "/login") {
-      // session is valid so redirect to todos if user tries to access login page
-      c.res.headers.set("HX-Redirect", "/todos");
-      return c.render(<Todos todos={[]} />);
-      //return c.redirect("/login");
+      console.log(
+        "session is valid so redirect to todos if user tries to access login page"
+      );
+      //c.res.headers.set("HX-Redirect", "/todos");
+      //const username = c.get("username");
+      //return c.render(<Todos todos={db.data.todos[username]} />);
+      return c.redirect("/todos");
     }
     await next();
     return;
