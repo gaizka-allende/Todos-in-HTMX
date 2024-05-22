@@ -1,9 +1,11 @@
-export const LoginForm = ({
-  invalidUsernameOrPassword = false,
-}: {
-  invalidUsernameOrPassword?: boolean;
-}) => (
-  <form hx-post="/login" hx-target="#screen" hx-swap="innerHTML" class="mb-4">
+export const LoginForm = () => (
+  <form
+    hx-post="/login"
+    hx-target="#screen"
+    hx-swap="innerHTML"
+    class="mb-4"
+    hx-target-401="#invalid-username-or-password"
+  >
     <div class="mb-2">
       <label for="username" class="md:mr-2">
         Username
@@ -32,8 +34,6 @@ export const LoginForm = ({
         Submit
       </button>
     </div>
-    {invalidUsernameOrPassword && (
-      <div class="text-red-500">Invalid username or password</div>
-    )}
+    <div id="invalid-username-or-password" class="text-red-500" />
   </form>
 );

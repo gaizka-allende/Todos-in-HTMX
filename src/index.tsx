@@ -14,6 +14,12 @@ import { timer } from "./utils";
 const secret = "secret ingredient";
 
 const Auth = createMiddleware(async (c, next) => {
+  if (c.req.path.includes("/test")) {
+    await next();
+    return;
+  }
+
+  // TODO handle post from the todos form without a session cookie
   const session = await getSignedCookie(c, secret, "session");
   if (session) {
     const [username, sessionDateTimestamp] = session.split(",");
@@ -50,21 +56,6 @@ const Auth = createMiddleware(async (c, next) => {
     await next();
     return;
   }
-  //if (c.req.method === "GET") {
-  //if (c.req.path !== "/") {
-  //return c.redirect("/");
-  //}
-  //}
-  //  if (c.req.path !== "/login") {
-  //const res = new Response("Unauthorized", {
-  //status: 401,
-  //headers: {
-  ////...
-  //},
-  //});
-  //throw new HTTPException(400, { res });
-  // }
-
   return c.redirect("/login");
   await next();
 });
@@ -97,6 +88,10 @@ interface Login {
     return c.render(<Todos todos={db.data.todos[username]} />);
   });
 
+  app.post("/test/todos", async (c) => {
+    return c.render(<Todos todos={[]} />);
+  });
+
   app.post(
     "/login",
     //zValidator(
@@ -118,10 +113,16 @@ interface Login {
 
       const user = db.data.logins.find((login) => login.username === username);
 
-      if (!user) return c.render(<LoginForm invalidUsernameOrPassword />);
+      if (!user || user.password !== password) {
+        const res = new Response("Invalid username or password", {
+          status: 401,
+          headers: {
+            Authenticate: 'error="invalid_invalid_username_or_password"',
+          },
+        });
 
-      if (user.password !== password)
-        return c.render(<LoginForm invalidUsernameOrPassword />);
+        throw new HTTPException(401, { res });
+      }
 
       await setSignedCookie(c, "session", `${username},${Date.now()}`, secret, {
         path: "/",
