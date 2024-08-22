@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "tsx watch src/index.tsx",
+    "dev": "tsx watch src/index.ts",
     "test": "npx playwright test",
     "test-ui": "npx playwright test --ui"
   },

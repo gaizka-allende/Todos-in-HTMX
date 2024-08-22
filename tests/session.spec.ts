@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { serializeSigned, parseSigned, SignedCookie } from "hono/utils/cookie";
 
-import { secret } from "../src/utils";
+import { secret } from "../src/utils/utils";
 
 type Cookie = {
   name: string;

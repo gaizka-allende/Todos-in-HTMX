@@ -4,17 +4,6 @@ import axios from "axios";
 test("sucessful login", async ({ page }) => {
   //await page.goto("http://localhost:3000/");
 
-  //await page.route("*/**/login", async (route) => {
-  //const response = await axios.post("http://localhost:3000/test/todos", {
-  //data: {},
-  //});
-  //await route.fulfill({
-  //status: 200,
-  //contentType: "application/text",
-  //body: response.data,
-  //});
-  //});
-
   //await page.getByLabel(/username/i).pressSequentially("sucess_login");
   //await page.getByLabel(/password/i).pressSequentially("success_password");
 

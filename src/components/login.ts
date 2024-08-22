@@ -1,4 +1,4 @@
-export const LoginForm = () => (
+export const renderLoginForm = () => /*html*/ `
   <form
     hx-post="/login"
     hx-target="#screen"
@@ -8,9 +8,7 @@ export const LoginForm = () => (
     hx-disabled-elt="input[type='text'], button"
   >
     <div class="mb-2">
-      <label for="username" class="md:mr-2">
-        Username
-      </label>
+      <label for="username" class="md:mr-2"> Username </label>
       <input
         type="text"
         id="username"
@@ -20,9 +18,7 @@ export const LoginForm = () => (
       />
     </div>
     <div class="mb-2">
-      <label for="password" class="md:mr-2">
-        Password
-      </label>
+      <label for="password" class="md:mr-2"> Password </label>
       <input
         type="password"
         id="password"
@@ -66,4 +62,4 @@ export const LoginForm = () => (
       </p>
     </div>
   </form>
-);
+`;
