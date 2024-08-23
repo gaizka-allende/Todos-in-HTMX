@@ -8,7 +8,7 @@ import { add, isBefore, nextSaturday } from "date-fns";
 
 import { renderHTMLDocument } from "./components/document";
 import { renderLoginForm } from "./components/login";
-import { renderTodo, renderTodos } from "./components/todo";
+import { renderTodo, renderTodos, renderTodosDone } from "./components/todo";
 import { secret } from "./utils/utils";
 
 interface Login {
@@ -140,13 +140,8 @@ interface Login {
     //),
     async (c) => {
       const username = c.get("username");
-      //const json = await c.req.json();
-      //console.log(json);
-      //console.log(c.req.parseBody());
       const formData = await c.req.formData();
       const title = formData.get("title");
-      //const { title } = c.req.valid("form");
-      //console.log(title);
       const id = crypto.randomUUID();
       db.data.todos[username].push({
         id,
@@ -154,15 +149,12 @@ interface Login {
         completed: false,
       });
       await db.write();
-      //await timer(5);
       return c.html(/*html*/ `
-          <div id="done" hx-swap-oob="true">
-            ${
-              db.data.todos[username].filter(
-                ({ completed }) => completed === true
-              ).length
-            } done
-          </div>
+          ${renderTodosDone(
+            db.data.todos[username].filter(
+              ({ completed }) => completed === true
+            ).length
+          )}
           ${renderTodo({ title, id, completed: false })}
         `);
     }
@@ -177,12 +169,12 @@ interface Login {
     await db.write();
 
     c.status(200);
-    return c.body(/*html*/ `<div id="done" hx-swap-oob="true">
-        ${
-          db.data.todos[username].filter(({ completed }) => completed === true)
-            .length
-        } done
-      </div>`);
+    return c.body(/*html*/ `
+      ${renderTodosDone(
+        db.data.todos[username].filter(({ completed }) => completed === true)
+          .length
+      )}
+      `);
   });
 
   app.patch("/todo/:id", async (c) => {
@@ -202,13 +194,10 @@ interface Login {
     await db.write();
     c.status(200);
     return c.body(/*html*/ `
-        <div id="done" hx-swap-oob="true">
-          ${
-            db.data.todos[username].filter(
-              ({ completed }) => completed === true
-            ).length
-          } done
-        </div>
+        ${renderTodosDone(
+          db.data.todos[username].filter(({ completed }) => completed === true)
+            .length
+        )}
         ${renderTodo({
           title,
           id,

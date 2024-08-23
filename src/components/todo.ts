@@ -37,6 +37,14 @@ export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ ` <form>
   </div>
 </form>`;
 
+export const renderTodosDone = (done: number) => /*html*/ ` <div
+  id="done"
+  hx-swap-oob="true"
+>
+  ${done}
+  done
+</div>`;
+
 export const renderTodos = (todos: Array<Todo>) => /*html*/ `
     <h1 class="text-4xl font-bold mb-4">
       <a href="/">Todo</a>
