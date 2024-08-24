@@ -61,6 +61,10 @@ interface Login {
           //c.res.headers.set("HX-Redirect", "/todos");
           //const username = c.get("username");
           return c.redirect("/todos");
+
+          //return c.html(
+          //renderHTMLDocument(renderTodos(db.data.todos[username]))
+          //);
         }
         await next();
         return;
@@ -181,10 +185,8 @@ interface Login {
     const username = c.get("username");
     const id = c.req.param("id");
     const formData = await c.req.formData();
-    //console.log(formData);
     const checkbox = formData.get("checkbox");
     const title = formData.get("title");
-    //console.log(id, title, checkbox);
     const todo = db.data.todos[username].find((todo) => todo.id === id);
 
     db.data.todos[username] = [

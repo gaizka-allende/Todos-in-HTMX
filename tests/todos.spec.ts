@@ -1,70 +1,127 @@
 import { test, expect } from "@playwright/test";
+import { serializeSigned } from "hono/utils/cookie";
 
-import { renderTodo } from "../src/components/todo";
+import { secret } from "../src/utils/utils";
 
-/*
+import {
+  renderTodos,
+  renderTodo,
+  renderTodosDone,
+} from "../src/components/todo";
+import { renderHTMLDocument } from "../src/components/document";
 
-/*<div id="done" hx-swap-oob="true">0 done</div>
-        <form>
-          <div class="item flex row items-center mb-2">
-            <input
-              type="checkbox"
-              class="mr-2"
-              id="checked"
-              name="checkbox"
-              hx-patch="/todo/5d686f21-8775-42c6-ae9a-2cd88bdfb6d2"
-            /><input
-              id="5d686f21-8775-42c6-ae9a-2cd88bdfb6d2"
-              class="font-medium py-1 px-4 my-1 rounded-lg text-lg border bg-gray-100 text-gray-600 mr-2"
-              value="buy milk"
-              hx-put="/todo/5d686f21-8775-42c6-ae9a-2cd88bdfb6d2"
-              name="title"
-            /><button
-              class="font-medium "
-              hx-delete="/todo/5d686f21-8775-42c6-ae9a-2cd88bdfb6d2"
-              hx-swap="outerHTML"
-              hx-target="closest div"
-            >
-              Delete
-            </button>
-          </div>
-        </form>
+test.beforeEach("create a login session", async ({ page, context }) => {
+  const serializedCookie = await serializeSigned(
+    "session",
+    `success_login,${Date.now()}`,
+    secret,
+    {
+      path: "/",
+      secure: true,
+      domain: "localhost",
+      httpOnly: true,
+      maxAge: 1000,
+      expires: new Date(Date.UTC(2000, 11, 24, 10, 30, 59, 900)),
+      sameSite: "Strict",
+      partitioned: true,
+    }
+  );
+  await context.addCookies([
+    {
+      name: "session",
+      value: serializedCookie.split(";")[0].split("=")[1],
+      path: "/",
+      secure: true,
+      domain: "localhost",
+      httpOnly: true,
+      sameSite: "Strict",
+    },
+  ]);
+});
 
-*/
+test("add a todo", async ({ page, context }) => {
+  await page.route("*/**/todos", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
 
-test("add a todo", async ({ page }) => {
-  await page.goto("http://localhost:3000");
-
-  await expect(page).toHaveTitle(/Todos/);
-
-  await page.getByLabel(/username/i).pressSequentially("success_login");
-
-  await page.getByLabel(/password/i).pressSequentially("success_password");
-
-  await page.getByRole("button", { name: /submit/i }).click();
-
-  await page.waitForSelector("text=Todo");
-
-  await page.getByTestId("add-todo").pressSequentially("buy milk");
+    await route.fulfill({
+      status: 200,
+      contentType: "text/html",
+      body: /*html*/ `${renderHTMLDocument(renderTodos([]))}`,
+    });
+  });
 
   await page.route("*/**/todo", async (route) => {
     if (route.request().method() !== "POST") {
       await route.fallback();
       return;
     }
+
     await route.fulfill({
       status: 200,
       contentType: "application/text",
-      body: /*html*/ `<div id="done" hx-swap-oob="true">1 done</div>
-        ${renderTodo({
-          title: "buy milk",
-          id: "5d686f21-8775-42c6-ae9a-2cd88bdfb6d2",
-          completed: false,
-        })}`,
+      body: /*html*/ `${renderTodosDone(1)}
+    ${renderTodo({
+      title: "buy milka",
+      id: "5d686f21-8775-42c6-ae9a-2cd88bdfb6d2",
+      completed: false,
+    })}`,
     });
   });
 
+  await page.goto("http://localhost:3000/todos");
+
+  await page.getByTestId("add-todo").pressSequentially("buy milk");
+
   await page.getByRole("button", { name: /add/i }).click();
 
+  //await page.waitForTimeout(3 * 1000);
+
   await expect(page.getByRole("button", { name: /delete/i })).toBeVisible();
+});
+
+test("delete a todo", async ({ page }) => {
+  await page.route("*/**/todos", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "text/html",
+      body: /*html*/ `${renderHTMLDocument(
+        renderTodos([
+          {
+            title: "buy milk",
+            id: "5d686f21-8775-42c6-ae9a-2cd88bdfb6d2",
+            completed: false,
+          },
+        ])
+      )}`,
+    });
+  });
+
+  await page.route("*/**/todo", async (route) => {
+    if (route.request().method() !== "DELETE") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/text",
+      body: renderTodosDone(0),
+    });
+  });
+
+  await page.goto("http://localhost:3000/todos");
+
+  await page.waitForSelector("text=Todo");
+
+  await page.getByRole("button", { name: /delete/i }).click();
+
+  await expect(page.getByRole("button", { name: /delete/i })).not.toBeVisible();
 });

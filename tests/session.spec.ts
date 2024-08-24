@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { serializeSigned, parseSigned, SignedCookie } from "hono/utils/cookie";
+import { serializeSigned } from "hono/utils/cookie";
 
 import { secret } from "../src/utils/utils";
 
