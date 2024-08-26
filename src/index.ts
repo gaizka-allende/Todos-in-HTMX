@@ -29,6 +29,8 @@ interface Login {
   app.use(
     "*",
     createMiddleware(async (c, next) => {
+      console.log(c.req.path);
+      console.log(c.req.method);
       // TODO handle post from the todos form without a session cookie
       const session = await getSignedCookie(c, secret, "session");
       if (session) {
