@@ -160,6 +160,7 @@ test("complete a todo", async ({ page }) => {
       body: renderTodosDone(1),
     });
   });
+
   await page.goto("http://localhost:3000/todos");
 
   await page.waitForSelector("text=Todo");
@@ -167,4 +168,52 @@ test("complete a todo", async ({ page }) => {
   await page.getByRole("checkbox").check();
 
   await expect(page.getByRole("checkbox")).toBeChecked();
+});
+
+test("uncomplete a todo", async ({ page }) => {
+  await page.route("*/**/todos", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "text/html",
+      body: /*html*/ `${renderHTMLDocument(
+        renderTodos([
+          {
+            title: "buy milk",
+            id: "5d686f21-8775-42c6-ae9a-2cd88bdfb6d2",
+            completed: true,
+          },
+        ])
+      )}`,
+    });
+  });
+
+  await page.route("*/**/todo/*", async (route) => {
+    if (route.request().method() !== "PATCH") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/text",
+      body: /*html*/ `${renderTodosDone(0)}${renderTodo({
+        title: "buy milk",
+        id: "5d686f21-8775-42c6-ae9a-2cd88bdfb6d2",
+        completed: false,
+      })}`,
+    });
+  });
+
+  await page.goto("http://localhost:3000/todos");
+
+  await page.waitForSelector("text=Todo");
+
+  await page.getByRole("checkbox").uncheck();
+
+  await expect(page.getByRole("checkbox")).not.toBeChecked();
 });

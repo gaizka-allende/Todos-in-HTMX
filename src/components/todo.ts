@@ -1,25 +1,21 @@
-interface Todo {
-  id: string;
-  title: string;
-  completed: boolean;
-}
+import { Todo } from "../types";
 
 export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ ` <form>
   <div class="item flex row items-center mb-2">
     <input
       type="checkbox"
       class="mr-2"
-      id="checked"
       name="checkbox"
       hx-patch="/todo/${id}"
+      hx-swap="${id}"
       ${completed ? "checked" : ""}
     />
     <input
-      id="{id}"
+      id="${id}"
       class="font-medium py-1 px-4 my-1 rounded-lg text-lg border bg-gray-100 text-gray-600 mr-2"
       value="${title}"
       hx-put="/todo/${id}"
-      name="title"
+      name="${title}"
       ${completed ? "disabled" : ""}
     />
     ${
@@ -77,15 +73,15 @@ export const renderTodos = (todos: Array<Todo>) => /*html*/ `
     </form>
     <ul id="todos">
       ${todos
-        .map(
-          ({ title, id, completed }) => /*html*/ `<li>
+        .map(({ title, id, completed }) => {
+          return /*html*/ `<li>
             ${renderTodo({
               title: title,
               id: id,
               completed: completed,
-            }).toString()}
-          </li>`
-        )
+            })}
+          </li>`;
+        })
         .join("")}
     </div>
     <div

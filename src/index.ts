@@ -10,6 +10,7 @@ import { renderHTMLDocument } from "./components/document";
 import { renderLoginForm } from "./components/login";
 import { renderTodo, renderTodos, renderTodosDone } from "./components/todo";
 import { secret } from "./utils/utils";
+import { Todo } from "./types";
 
 interface Login {
   username: string;
@@ -189,11 +190,11 @@ interface Login {
     const formData = await c.req.formData();
     const checkbox = formData.get("checkbox");
     const title = formData.get("title");
-    const todo = db.data.todos[username].find((todo) => todo.id === id);
+    const todo = db.data.todos[username].find((todo) => todo.id === id) as Todo;
 
     db.data.todos[username] = [
       ...db.data.todos[username].filter((todo) => todo.id !== id),
-      { ...todo, title, completed: checkbox === "on" },
+      { ...todo, completed: checkbox === "on" },
     ];
     await db.write();
     c.status(200);
@@ -203,8 +204,7 @@ interface Login {
             .length
         )}
         ${renderTodo({
-          title,
-          id,
+          ...todo,
           completed: checkbox === "on",
         })}
       `);
