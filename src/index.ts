@@ -19,25 +19,35 @@ interface Login {
   hashFunction?: Function | undefined;
 }
 
-(async () => {
-  const app = new Hono();
+type RequestVariables = {
+  username: string;
+};
 
-  const db = await JSONFilePreset("db.json", {
-    todos: [],
-    logins: Array<Login>,
-  });
+(async () => {
+  const app = new Hono<{ Variables: RequestVariables }>();
+
+  type Data = {
+    todos: { [username: string]: Array<Todo> };
+    logins: Array<Login>;
+  };
+
+  const defaultData = {
+    todos: {},
+    logins: [],
+  };
+  const db = await JSONFilePreset<Data>("db.json", defaultData);
 
   app.use(
     "*",
     createMiddleware(async (c, next) => {
-      console.log(c.req.path);
-      console.log(c.req.method);
       // TODO handle post from the todos form without a session cookie
       const session = await getSignedCookie(c, secret, "session");
       if (session) {
         const [username, sessionDateTimestamp] = session.split(",");
 
-        if (!db.data.logins.find((login) => login.username === username)) {
+        const { logins } = db.data;
+
+        if (!logins.find((login) => login.username === username)) {
           console.log("invalid username");
           throw new HTTPException(401, { message: "Invalid user session" });
         }
@@ -90,7 +100,8 @@ interface Login {
   });
 
   app.get("/todos", async (c) => {
-    const username = c.get("username");
+    const username = c.get("username") as string;
+    console.log(username);
     return c.html(renderHTMLDocument(renderTodos(db.data.todos[username])));
   });
 
@@ -104,8 +115,8 @@ interface Login {
     //),
     async (c) => {
       const formData = await c.req.formData();
-      const username = formData.get("username");
-      const password = formData.get("password");
+      const username = formData.get("username") as string;
+      const password = formData.get("password") as string;
 
       const user = db.data.logins.find((login) => login.username === username);
 
@@ -148,7 +159,7 @@ interface Login {
     async (c) => {
       const username = c.get("username");
       const formData = await c.req.formData();
-      const title = formData.get("title");
+      const title = formData.get("title") as string;
       const id = crypto.randomUUID();
       db.data.todos[username].push({
         id,

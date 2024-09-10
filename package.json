@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "tsc:watch": "tsc -p ./tsconfig.json --watch",
     "dev": "tsx watch src/index.ts",
     "test": "npx playwright test",
     "test-ui": "npx playwright test --ui"
@@ -17,6 +18,8 @@
   "devDependencies": {
     "@playwright/test": "^1.44.1",
     "@types/node": "^20.11.17",
-    "tsx": "^3.12.2"
+    "tsx": "^3.12.2",
+    "typed-htmx": "^0.3.1",
+    "typescript": "^5.5.4"
   }
 }

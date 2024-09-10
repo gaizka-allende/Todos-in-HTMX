@@ -8,7 +8,9 @@
       "node",
       "typed-htmx"
     ],
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
-  }
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["./src/**/*"]
 }
+
