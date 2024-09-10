@@ -66,7 +66,6 @@ type RequestVariables = {
         }
         console.log("session is valid (not expired)");
         c.set("username", username);
-        c.set("sessionDate", sessionDate);
         if (c.req.path === "/" || c.req.path === "/login") {
           console.log(
             "session is valid so redirect to todos if user tries to access login page"
