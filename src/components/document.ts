@@ -24,4 +24,4 @@ export const renderHTMLDocument = (children: string) => /*html*/ `
       </div>
     </body>
   </html>
-`;
+`

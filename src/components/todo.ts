@@ -1,4 +1,4 @@
-import { Todo } from "../types";
+import { Todo } from '../types'
 
 export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ ` <form>
   <div class="item flex row items-center mb-2">
@@ -8,7 +8,7 @@ export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ ` <form>
       name="checkbox"
       hx-patch="/todo/${id}"
       hx-swap="${id}"
-      ${completed ? "checked" : ""}
+      ${completed ? 'checked' : ''}
     />
     <input
       id="${id}"
@@ -16,7 +16,7 @@ export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ ` <form>
       value="${title}"
       hx-put="/todo/${id}"
       name="${title}"
-      ${completed ? "disabled" : ""}
+      ${completed ? 'disabled' : ''}
     />
     ${
       !completed
@@ -28,10 +28,10 @@ export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ ` <form>
           >
             Delete
           </button>`
-        : ""
+        : ''
     }
   </div>
-</form>`;
+</form>`
 
 export const renderTodosDone = (done: number) => /*html*/ ` <div
   id="done"
@@ -39,7 +39,7 @@ export const renderTodosDone = (done: number) => /*html*/ ` <div
 >
   ${done}
   done
-</div>`;
+</div>`
 
 export const renderTodos = (todos: Array<Todo>) => /*html*/ `
     <h1 class="text-4xl font-bold mb-4">
@@ -80,12 +80,12 @@ export const renderTodos = (todos: Array<Todo>) => /*html*/ `
               id: id,
               completed: completed,
             })}
-          </li>`;
+          </li>`
         })
-        .join("")}
+        .join('')}
     </div>
     <div
       role="status"
       class="transition-[display] ease-in hidden max-w-sm animate-pulse h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"
     ></div>
-  `;
+  `
