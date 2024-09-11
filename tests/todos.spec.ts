@@ -10,7 +10,7 @@ import {
 } from "../src/components/todo";
 import { renderHTMLDocument } from "../src/components/document";
 
-test.beforeEach("create a login session", async ({ page, context }) => {
+test.beforeEach("create a login session", async ({ context }) => {
   const serializedCookie = await serializeSigned(
     "session",
     `success_login,${Date.now()}`,
@@ -24,7 +24,7 @@ test.beforeEach("create a login session", async ({ page, context }) => {
       expires: new Date(Date.UTC(2000, 11, 24, 10, 30, 59, 900)),
       sameSite: "Strict",
       partitioned: true,
-    }
+    },
   );
   await context.addCookies([
     {
@@ -39,7 +39,7 @@ test.beforeEach("create a login session", async ({ page, context }) => {
   ]);
 });
 
-test("add a todo", async ({ page, context }) => {
+test("add a todo", async ({ page }) => {
   await page.route("*/**/todos", async (route) => {
     if (route.request().method() !== "GET") {
       await route.fallback();
@@ -99,7 +99,7 @@ test("delete a todo", async ({ page }) => {
             id: "5d686f21-8775-42c6-ae9a-2cd88bdfb6d2",
             completed: false,
           },
-        ])
+        ]),
       )}`,
     });
   });
@@ -143,7 +143,7 @@ test("complete a todo", async ({ page }) => {
             id: "5d686f21-8775-42c6-ae9a-2cd88bdfb6d2",
             completed: false,
           },
-        ])
+        ]),
       )}`,
     });
   });
@@ -187,7 +187,7 @@ test("uncomplete a todo", async ({ page }) => {
             id: "5d686f21-8775-42c6-ae9a-2cd88bdfb6d2",
             completed: true,
           },
-        ])
+        ]),
       )}`,
     });
   });

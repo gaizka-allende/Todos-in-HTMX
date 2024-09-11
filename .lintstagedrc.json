@@ -1,0 +1,4 @@
+{
+  "*.{json,js,ts,jsx,tsx,html}": ["prettier . --write"],
+  "**/*.ts": "tsc-files --noEmit"
+}

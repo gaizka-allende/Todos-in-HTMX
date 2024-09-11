@@ -1,9 +1,11 @@
 {
   "scripts": {
+    "tsc": "tsc -p ./tsconfig.json",
     "tsc:watch": "tsc -p ./tsconfig.json --watch",
     "dev": "tsx watch src/index.ts",
     "test": "npx playwright test",
-    "test-ui": "npx playwright test --ui"
+    "test-ui": "npx playwright test --ui",
+    "prepare": "husky"
   },
   "dependencies": {
     "@hono/node-server": "^1.8.2",
@@ -18,6 +20,10 @@
   "devDependencies": {
     "@playwright/test": "^1.44.1",
     "@types/node": "^20.11.17",
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "tsc-files": "^1.1.4",
     "tsx": "^3.12.2",
     "typed-htmx": "^0.3.1",
     "typescript": "^5.5.4"

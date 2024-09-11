@@ -46,7 +46,7 @@ export const renderTodos = (todos: Array<Todo>) => /*html*/ `
       <a href="/">Todo</a>
     </h1>
     ${renderTodosDone(
-      todos.filter(({ completed }) => completed === true).length
+      todos.filter(({ completed }) => completed === true).length,
     )}
     <form
       hx-post="/todo"

@@ -4,38 +4,22 @@ import { createMiddleware } from "hono/factory";
 import { JSONFilePreset } from "lowdb/node";
 import { HTTPException } from "hono/http-exception";
 import { setSignedCookie, getSignedCookie } from "hono/cookie";
-import { add, isBefore, nextSaturday } from "date-fns";
+import { add, isBefore } from "date-fns";
 
 import { renderHTMLDocument } from "./components/document";
 import { renderLoginForm } from "./components/login";
 import { renderTodo, renderTodos, renderTodosDone } from "./components/todo";
 import { secret } from "./utils/utils";
-import { Todo } from "./types";
-
-interface Login {
-  username: string;
-  password: string;
-  realm?: string | undefined;
-  hashFunction?: Function | undefined;
-}
-
-type RequestVariables = {
-  username: string;
-};
+import { Database, Todo, RequestVariables } from "./types";
 
 (async () => {
   const app = new Hono<{ Variables: RequestVariables }>();
-
-  type Data = {
-    todos: { [username: string]: Array<Todo> };
-    logins: Array<Login>;
-  };
 
   const defaultData = {
     todos: {},
     logins: [],
   };
-  const db = await JSONFilePreset<Data>("db.json", defaultData);
+  const db = await JSONFilePreset<Database>("db.json", defaultData);
 
   app.use(
     "*",
@@ -68,7 +52,7 @@ type RequestVariables = {
         c.set("username", username);
         if (c.req.path === "/" || c.req.path === "/login") {
           console.log(
-            "session is valid so redirect to todos if user tries to access login page"
+            "session is valid so redirect to todos if user tries to access login page",
           );
           //c.res.headers.set("HX-Redirect", "/todos");
           //const username = c.get("username");
@@ -89,7 +73,7 @@ type RequestVariables = {
       }
       //await next();
       return c.redirect("/login");
-    })
+    }),
   );
 
   //app.get("*", renderer);
@@ -144,7 +128,7 @@ type RequestVariables = {
       if (!db.data.todos[username]) db.data.todos[username] = [];
       c.res.headers.set("HX-Redirect", "/todos");
       return c.html(renderHTMLDocument(renderTodos(db.data.todos[username])));
-    }
+    },
   );
 
   app.post(
@@ -169,19 +153,19 @@ type RequestVariables = {
       return c.html(/*html*/ `
           ${renderTodosDone(
             db.data.todos[username].filter(
-              ({ completed }) => completed === true
-            ).length
+              ({ completed }) => completed === true,
+            ).length,
           )}
           ${renderTodo({ title, id, completed: false })}
         `);
-    }
+    },
   );
 
   app.delete("/todo/:id", async (c) => {
     const id = c.req.param("id");
     const username = c.get("username");
     db.data.todos[username] = db.data.todos[username].filter(
-      (todo) => todo.id !== id
+      (todo) => todo.id !== id,
     );
     await db.write();
 
@@ -189,7 +173,7 @@ type RequestVariables = {
     return c.body(/*html*/ `
       ${renderTodosDone(
         db.data.todos[username].filter(({ completed }) => completed === true)
-          .length
+          .length,
       )}
       `);
   });
@@ -199,7 +183,6 @@ type RequestVariables = {
     const id = c.req.param("id");
     const formData = await c.req.formData();
     const checkbox = formData.get("checkbox");
-    const title = formData.get("title");
     const todo = db.data.todos[username].find((todo) => todo.id === id) as Todo;
 
     db.data.todos[username] = [
@@ -211,7 +194,7 @@ type RequestVariables = {
     return c.body(/*html*/ `
         ${renderTodosDone(
           db.data.todos[username].filter(({ completed }) => completed === true)
-            .length
+            .length,
         )}
         ${renderTodo({
           ...todo,

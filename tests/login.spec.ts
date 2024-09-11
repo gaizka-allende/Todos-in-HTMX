@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import axios from "axios";
 
 test("sucessful login", async ({ page }) => {
   //await page.goto("http://localhost:3000/");
@@ -47,7 +46,7 @@ test("unsuccesful login", async ({ page }) => {
   await page.waitForSelector("text=Invalid username or password");
 });
 
-test("sucessful login second attempt", async ({ page, request }) => {
+test("sucessful login second attempt", async ({ page }) => {
   await page.goto("http://localhost:3000/");
 
   //await page.route("*/**/login", async (route) => {
