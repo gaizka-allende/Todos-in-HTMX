@@ -57,7 +57,7 @@ export const renderLoginForm = () => /*html*/ `
     </div>
     <div id="validation-errors" class="text-red-500">
       <p id="invalid-username-or-password" />
-      <p id="passport-too-short" class="hidden">
+      <p id="passport-too-short"   class="text-sm hidden">
         Password must be at least 8 characters long
       </p>
     </div>
