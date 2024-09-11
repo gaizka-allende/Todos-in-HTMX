@@ -45,7 +45,7 @@ export const renderLoginForm = () => /*html*/ `
         "
       />
     </div>
-    <div class="mb-2">
+    <div class="mt-6 mb-2 flex justify-end">
       <button
         id="submit"
         type="submit"
