@@ -3,11 +3,12 @@ import { Todo } from '../types'
 export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ ` <form>
   <div class="item flex row items-center mb-2">
     <input
+      role="checkbox"
       type="checkbox"
       class="mr-2"
       name="checkbox"
       hx-patch="/todo/${id}"
-      hx-swap="${id}"
+      hx-target="#todos"
       ${completed ? 'checked' : ''}
     />
     <input
@@ -23,8 +24,7 @@ export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ ` <form>
         ? /*html*/ `<button
             class="font-medium"
             hx-delete="/todo/${id}"
-            hx-swap="outerHTML"
-            hx-target="closest div"
+            hx-target="#todos"
           >
             Delete
           </button>`
@@ -33,46 +33,46 @@ export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ ` <form>
   </div>
 </form>`
 
-export const renderTodosDone = (done: number) => /*html*/ ` <div
-  id="done"
-  hx-swap-oob="true"
->
-  ${done}
-  done
-</div>`
+export const renderTodosDone = (done: number) =>
+  /*html*/ ` <span id="done"> Completed (${done}) </span>`
 
-export const renderTodos = (todos: Array<Todo>) => /*html*/ `
-    <h1 class="text-4xl font-bold mb-4">
-      <a href="/">Todo</a>
-    </h1>
-    ${renderTodosDone(
-      todos.filter(({ completed }) => completed === true).length,
-    )}
-    <form
-      hx-post="/todo"
-      hx-target="#todos"
-      hx-swap="beforeend"
-      _="on htmx:afterRequest reset() me"
-      class="mb-4"
-      hx-indicator="#adding-item"
-    >
-      <div class="mb-2 flex">
-        <input
-          name="title"
-          type="text"
-          class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5 mr-2"
-          data-testid="add-todo"
-        />
-        <button
-          class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2 text-center"
-          type="submit"
-        >
-          Add
-        </button>
-      </div>
-    </form>
-    <ul id="todos">
+export const renderTodosContainer = (todos: Array<Todo>) => /*html*/ `
+  <h1 class="text-4xl font-bold mb-4">
+    <a href="/">Todo</a>
+  </h1>
+  <form
+    hx-post="/todo"
+    hx-target="#todos"
+    _="on htmx:afterRequest reset() me"
+    class="mb-4"
+    hx-indicator="#adding-item"
+  >
+    <div class="mb-2 flex">
+      <input
+        name="title"
+        type="text"
+        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5 mr-2"
+        data-testid="add-todo"
+      />
+      <button
+        class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2 text-center"
+        type="submit"
+      >
+        Add
+      </button>
+    </div>
+  </form>
+  ${renderTodos(todos)}
+  <div
+    role="status"
+    class="transition-[display] ease-in hidden max-w-sm animate-pulse h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"
+  ></div>
+`
+
+export const renderTodos = (todos: Array<Todo>) => /*html*/ ` <div id="todos">
+    <ul>
       ${todos
+        .filter(({ completed }) => completed === false)
         .map(({ title, id, completed }) => {
           return /*html*/ `<li>
             ${renderTodo({
@@ -83,9 +83,44 @@ export const renderTodos = (todos: Array<Todo>) => /*html*/ `
           </li>`
         })
         .join('')}
-    </div>
-    <div
-      role="status"
-      class="transition-[display] ease-in hidden max-w-sm animate-pulse h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"
-    ></div>
-  `
+    </ul>
+    <details class="group" data-testid="show-completed">
+      <summary
+        class="flex items-center gap-3 font-medium marker:content-none hover:cursor-pointer"
+      >
+        <svg
+          class="w-5 h-5 text-gray-500 transition group-open:rotate-90"
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+          ></path>
+        </svg>
+        ${renderTodosDone(
+          todos.filter(({ completed }) => completed === true).length,
+        )}
+      </summary>
+
+      <article class="px-4 pb-4">
+        <ul id="todos-done">
+          ${todos
+            .filter(({ completed }) => completed === true)
+            .map(({ title, id, completed }) => {
+              return /*html*/ `<li>
+              ${renderTodo({
+                title: title,
+                id: id,
+                completed: completed,
+              })}
+            </li>`
+            })
+            .join('')}
+        </ul>
+      </article>
+    </details>
+  </div>`

@@ -8,7 +8,7 @@ import { add, isBefore } from 'date-fns'
 
 import { renderHTMLDocument } from './components/document'
 import { renderLoginForm } from './components/login'
-import { renderTodo, renderTodos, renderTodosDone } from './components/todo'
+import { renderTodos, renderTodosContainer } from './components/todo'
 import { secret } from './utils/utils'
 import { Database, Todo, RequestVariables } from './types'
 ;(async () => {
@@ -56,10 +56,6 @@ import { Database, Todo, RequestVariables } from './types'
           //c.res.headers.set("HX-Redirect", "/todos");
           //const username = c.get("username");
           return c.redirect('/todos')
-
-          //return c.html(
-          //renderHTMLDocument(renderTodos(db.data.todos[username]))
-          //);
         }
         await next()
         return
@@ -83,8 +79,9 @@ import { Database, Todo, RequestVariables } from './types'
 
   app.get('/todos', async c => {
     const username = c.get('username') as string
-    console.log(username)
-    return c.html(renderHTMLDocument(renderTodos(db.data.todos[username])))
+    return c.html(
+      renderHTMLDocument(renderTodosContainer(db.data.todos[username])),
+    )
   })
 
   app.post(
@@ -126,7 +123,9 @@ import { Database, Todo, RequestVariables } from './types'
 
       if (!db.data.todos[username]) db.data.todos[username] = []
       c.res.headers.set('HX-Redirect', '/todos')
-      return c.html(renderHTMLDocument(renderTodos(db.data.todos[username])))
+      return c.html(
+        renderHTMLDocument(renderTodosContainer(db.data.todos[username])),
+      )
     },
   )
 
@@ -149,14 +148,8 @@ import { Database, Todo, RequestVariables } from './types'
         completed: false,
       })
       await db.write()
-      return c.html(/*html*/ `
-          ${renderTodosDone(
-            db.data.todos[username].filter(
-              ({ completed }) => completed === true,
-            ).length,
-          )}
-          ${renderTodo({ title, id, completed: false })}
-        `)
+
+      return c.body(/*html*/ `${renderTodos(db.data.todos[username])}`)
     },
   )
 
@@ -169,37 +162,25 @@ import { Database, Todo, RequestVariables } from './types'
     await db.write()
 
     c.status(200)
-    return c.body(/*html*/ `
-      ${renderTodosDone(
-        db.data.todos[username].filter(({ completed }) => completed === true)
-          .length,
-      )}
-      `)
+
+    return c.body(/*html*/ `${renderTodos(db.data.todos[username])}`)
   })
 
   app.patch('/todo/:id', async c => {
     const username = c.get('username')
     const id = c.req.param('id')
-    const formData = await c.req.formData()
-    const checkbox = formData.get('checkbox')
     const todo = db.data.todos[username].find(todo => todo.id === id) as Todo
 
-    db.data.todos[username] = [
+    const todos = [
       ...db.data.todos[username].filter(todo => todo.id !== id),
-      { ...todo, completed: checkbox === 'on' },
+      { ...todo, completed: todo.completed ? false : true },
     ]
+
+    db.data.todos[username] = todos
     await db.write()
     c.status(200)
-    return c.body(/*html*/ `
-        ${renderTodosDone(
-          db.data.todos[username].filter(({ completed }) => completed === true)
-            .length,
-        )}
-        ${renderTodo({
-          ...todo,
-          completed: checkbox === 'on',
-        })}
-      `)
+
+    return c.body(/*html*/ `${renderTodos(todos)}`)
   })
 
   const port = 3000

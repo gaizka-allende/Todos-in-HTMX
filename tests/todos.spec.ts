@@ -3,11 +3,7 @@ import { serializeSigned } from 'hono/utils/cookie'
 
 import { secret } from '../src/utils/utils'
 
-import {
-  renderTodos,
-  renderTodo,
-  renderTodosDone,
-} from '../src/components/todo'
+import { renderTodos, renderTodosContainer } from '../src/components/todo'
 import { renderHTMLDocument } from '../src/components/document'
 
 test.beforeEach('create a login session', async ({ context }) => {
@@ -49,7 +45,7 @@ test('add a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: /*html*/ `${renderHTMLDocument(renderTodos([]))}`,
+      body: /*html*/ `${renderHTMLDocument(renderTodosContainer([]))}`,
     })
   })
 
@@ -62,12 +58,13 @@ test('add a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/text',
-      body: /*html*/ `${renderTodosDone(1)}
-    ${renderTodo({
-      title: 'buy milka',
-      id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-      completed: false,
-    })}`,
+      body: /*html*/ `${renderTodos([
+        {
+          title: 'buy milka',
+          id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
+          completed: false,
+        },
+      ])}`,
     })
   })
 
@@ -76,8 +73,6 @@ test('add a todo', async ({ page }) => {
   await page.getByTestId('add-todo').pressSequentially('buy milk')
 
   await page.getByRole('button', { name: /add/i }).click()
-
-  //await page.waitForTimeout(3 * 1000);
 
   await expect(page.getByRole('button', { name: /delete/i })).toBeVisible()
 })
@@ -93,7 +88,7 @@ test('delete a todo', async ({ page }) => {
       status: 200,
       contentType: 'text/html',
       body: /*html*/ `${renderHTMLDocument(
-        renderTodos([
+        renderTodosContainer([
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
@@ -113,7 +108,7 @@ test('delete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/text',
-      body: renderTodosDone(0),
+      body: renderTodos([]),
     })
   })
 
@@ -137,7 +132,7 @@ test('complete a todo', async ({ page }) => {
       status: 200,
       contentType: 'text/html',
       body: /*html*/ `${renderHTMLDocument(
-        renderTodos([
+        renderTodosContainer([
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
@@ -157,7 +152,13 @@ test('complete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/text',
-      body: renderTodosDone(1),
+      body: renderTodos([
+        {
+          title: 'buy milk',
+          id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
+          completed: true,
+        },
+      ]),
     })
   })
 
@@ -165,7 +166,9 @@ test('complete a todo', async ({ page }) => {
 
   await page.waitForSelector('text=Todo')
 
-  await page.getByRole('checkbox').check()
+  await page.click('input[type="checkbox"]')
+
+  await page.getByTestId('show-completed').click()
 
   await expect(page.getByRole('checkbox')).toBeChecked()
 })
@@ -181,7 +184,7 @@ test('uncomplete a todo', async ({ page }) => {
       status: 200,
       contentType: 'text/html',
       body: /*html*/ `${renderHTMLDocument(
-        renderTodos([
+        renderTodosContainer([
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
@@ -201,11 +204,13 @@ test('uncomplete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/text',
-      body: /*html*/ `${renderTodosDone(0)}${renderTodo({
-        title: 'buy milk',
-        id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-        completed: false,
-      })}`,
+      body: /*html*/ `${renderTodos([
+        {
+          title: 'buy milk',
+          id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
+          completed: false,
+        },
+      ])}`,
     })
   })
 
@@ -213,7 +218,10 @@ test('uncomplete a todo', async ({ page }) => {
 
   await page.waitForSelector('text=Todo')
 
-  await page.getByRole('checkbox').uncheck()
+  //await page.getByRole('checkbox').uncheck()
+
+  await page.getByTestId('show-completed').click()
+  await page.click('input[type="checkbox"]')
 
   await expect(page.getByRole('checkbox')).not.toBeChecked()
 })
