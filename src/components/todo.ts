@@ -1,6 +1,6 @@
 import { Todo } from '../types'
 
-export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ ` <form>
+export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ `
   <div class="item flex row items-center mb-2">
     <input
       role="checkbox"
@@ -12,11 +12,12 @@ export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ ` <form>
       ${completed ? 'checked' : ''}
     />
     <input
+      role="textbox"
       id="${id}"
       class="font-medium py-1 px-4 my-1 rounded-lg text-lg border bg-gray-100 text-gray-600 mr-2"
       value="${title}"
       hx-put="/todo/${id}"
-      name="${title}"
+      name="${id}"
       ${completed ? 'disabled' : ''}
     />
     ${
@@ -31,7 +32,7 @@ export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ ` <form>
         : ''
     }
   </div>
-</form>`
+`
 
 export const renderTodosDone = (done: number) =>
   /*html*/ ` <span id="done"> Completed (${done}) </span>`

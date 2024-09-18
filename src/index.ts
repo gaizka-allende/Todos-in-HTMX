@@ -11,6 +11,8 @@ import { renderLoginForm } from './components/login'
 import { renderTodos, renderTodosContainer } from './components/todo'
 import { secret } from './utils/utils'
 import { Database, Todo, RequestVariables } from './types'
+
+import { putReturn } from './routes/put'
 ;(async () => {
   const app = new Hono<{ Variables: RequestVariables }>()
 
@@ -181,6 +183,27 @@ import { Database, Todo, RequestVariables } from './types'
     c.status(200)
 
     return c.body(/*html*/ `${renderTodos(todos)}`)
+  })
+
+  app.put('/todo/:id', async c => {
+    const username = c.get('username')
+    const id = c.req.param('id')
+    const todo = db.data.todos[username].find(todo => todo.id === id) as Todo
+    const formData = await c.req.formData()
+    const title = formData.get(id) as string
+
+    const todos = [
+      ...db.data.todos[username].filter(todo => todo.id !== id),
+      { ...todo, title },
+    ]
+
+    db.data.todos[username] = todos
+    await db.write()
+    c.status(200)
+
+    //return c.text(`PUT /todo/${id}`)
+    //return new Response(`PUT /todo/${id}`)
+    return new Response(putReturn(id))
   })
 
   const port = 3000

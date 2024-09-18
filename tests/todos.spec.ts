@@ -5,6 +5,7 @@ import { secret } from '../src/utils/utils'
 
 import { renderTodos, renderTodosContainer } from '../src/components/todo'
 import { renderHTMLDocument } from '../src/components/document'
+import { putReturn } from '../src/routes/put'
 
 test.beforeEach('create a login session', async ({ context }) => {
   const serializedCookie = await serializeSigned(
@@ -218,10 +219,52 @@ test('uncomplete a todo', async ({ page }) => {
 
   await page.waitForSelector('text=Todo')
 
-  //await page.getByRole('checkbox').uncheck()
-
   await page.getByTestId('show-completed').click()
   await page.click('input[type="checkbox"]')
 
   await expect(page.getByRole('checkbox')).not.toBeChecked()
+})
+
+test('edit a todo', async ({ page }) => {
+  await page.route('*/**/todos', async route => {
+    if (route.request().method() !== 'GET') {
+      await route.fallback()
+      return
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'text/html',
+      body: /*html*/ `${renderHTMLDocument(
+        renderTodosContainer([
+          {
+            title: 'buy milk',
+            id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
+            completed: false,
+          },
+        ]),
+      )}`,
+    })
+  })
+
+  await page.route('*/**/todo/*', async route => {
+    if (route.request().method() !== 'PUT') {
+      await route.fallback()
+      return
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/text',
+      body: putReturn('5d686f21-8775-42c6-ae9a-2cd88bdfb6d2'),
+    })
+  })
+
+  await page.goto('http://localhost:3000/todos')
+
+  await page.waitForSelector('text=Todo')
+
+  await page
+    .locator('[name="5d686f21-8775-42c6-ae9a-2cd88bdfb6d2"]')
+    .fill('buy chocolate')
 })
