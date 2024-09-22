@@ -1,3 +1,5 @@
+import { Low } from 'lowdb'
+
 export type Database = {
   todos: { [username: string]: Array<Todo> }
   logins: Array<Login>
@@ -15,6 +17,7 @@ export interface Login {
   hashFunction?: Function | undefined
 }
 
-export type RequestVariables = {
+export type ContextConstants = {
+  db: Low<Database>
   username: string
 }

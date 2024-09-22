@@ -5,7 +5,7 @@ import { secret } from '../src/utils/utils'
 
 import { renderTodos, renderTodosContainer } from '../src/components/todo'
 import { renderHTMLDocument } from '../src/components/document'
-import { putReturn } from '../src/routes/put'
+import { response } from '../src/routes/todo/put'
 
 test.beforeEach('create a login session', async ({ context }) => {
   const serializedCookie = await serializeSigned(
@@ -256,7 +256,7 @@ test('edit a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/text',
-      body: putReturn('5d686f21-8775-42c6-ae9a-2cd88bdfb6d2'),
+      body: response('5d686f21-8775-42c6-ae9a-2cd88bdfb6d2'),
     })
   })
 
