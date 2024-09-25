@@ -16,6 +16,9 @@ const schema = z.object({
     .string({
       required_error: 'Username is required',
     })
+    .regex(/^[a-z0-9]+$/, {
+      message: 'Username must contain only letters or numbers',
+    })
     .min(6, { message: 'Username must be at least 6 characters long' })
     .max(20, { message: 'Username must be at most 20 characters long' }),
   password: z
@@ -31,10 +34,7 @@ export const routes = (app: Hono<{ Variables: ContextConstants }>) => {
   app.post(
     '/login',
     zValidator('form', schema, (result, c) => {
-      console.log(c.req.formData())
-
       if (!result.success) {
-        console.log(result.error.issues[0].message)
         return c.text(result.error.issues[0].message, 400)
       }
       return
