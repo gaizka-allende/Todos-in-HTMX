@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.8.2",
+    "@hono/zod-validator": "^0.2.2",
     "axios": "^1.7.1",
     "date-fns": "^3.6.0",
     "hono": "^4.1.3",

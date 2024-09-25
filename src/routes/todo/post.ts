@@ -3,6 +3,7 @@ import { Low } from 'lowdb'
 
 import { Database } from '../../types'
 import { renderTodos } from '../../components/todo'
+import html from '../../utils/html'
 
 export const response = (id: string) => `PUT /todo/${id}`
 
@@ -19,5 +20,5 @@ export default async (c: Context) => {
   })
   await db.write()
 
-  return c.body(/*html*/ `${renderTodos(db.data.todos[username])}`)
+  return c.body(html`${renderTodos(db.data.todos[username])}`)
 }

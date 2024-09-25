@@ -1,5 +1,7 @@
-export const renderHTMLDocument = (children: string) => /*html*/ `
-  <!DOCTYPE html>
+import html from '../utils/html'
+
+export const renderHTMLDocument = (children: string) => html`
+  <!doctype html>
   <html>
     <head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />

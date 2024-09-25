@@ -3,6 +3,7 @@ import { Low } from 'lowdb'
 
 import { Database, Todo } from '../../types'
 import { renderTodos } from '../../components/todo'
+import html from '../../utils/html'
 
 export default async (c: Context) => {
   const db = c.get('db') as Low<Database>
@@ -19,5 +20,5 @@ export default async (c: Context) => {
   await db.write()
   c.status(200)
 
-  return c.body(/*html*/ `${renderTodos(todos)}`)
+  return c.body(html`${renderTodos(todos)}`)
 }

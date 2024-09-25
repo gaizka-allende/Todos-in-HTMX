@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { serializeSigned } from 'hono/utils/cookie'
 
 import { secret } from '../src/utils/utils'
-
+import html from '../src/utils/html'
 import { renderTodos, renderTodosContainer } from '../src/components/todo'
 import { renderHTMLDocument } from '../src/components/document'
 import { response } from '../src/routes/todo/put'
@@ -46,7 +46,7 @@ test('add a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: /*html*/ `${renderHTMLDocument(renderTodosContainer([]))}`,
+      body: html`${renderHTMLDocument(renderTodosContainer([]))}`,
     })
   })
 
@@ -59,7 +59,7 @@ test('add a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/text',
-      body: /*html*/ `${renderTodos([
+      body: html`${renderTodos([
         {
           title: 'buy milka',
           id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
@@ -88,7 +88,7 @@ test('delete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: /*html*/ `${renderHTMLDocument(
+      body: html`${renderHTMLDocument(
         renderTodosContainer([
           {
             title: 'buy milk',
@@ -132,7 +132,7 @@ test('complete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: /*html*/ `${renderHTMLDocument(
+      body: html`${renderHTMLDocument(
         renderTodosContainer([
           {
             title: 'buy milk',
@@ -184,7 +184,7 @@ test('uncomplete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: /*html*/ `${renderHTMLDocument(
+      body: html`${renderHTMLDocument(
         renderTodosContainer([
           {
             title: 'buy milk',
@@ -205,7 +205,7 @@ test('uncomplete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/text',
-      body: /*html*/ `${renderTodos([
+      body: html`${renderTodos([
         {
           title: 'buy milk',
           id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
@@ -235,7 +235,7 @@ test('edit a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: /*html*/ `${renderHTMLDocument(
+      body: html`${renderHTMLDocument(
         renderTodosContainer([
           {
             title: 'buy milk',

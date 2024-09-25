@@ -1,6 +1,8 @@
+import html from '../utils/html'
+
 import { Todo } from '../types'
 
-export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ `
+export const renderTodo = ({ title, id, completed }: Todo) => html`
   <div class="item flex row items-center mb-2">
     <input
       role="checkbox"
@@ -20,24 +22,22 @@ export const renderTodo = ({ title, id, completed }: Todo) => /*html*/ `
       name="${id}"
       ${completed ? 'disabled' : ''}
     />
-    ${
-      !completed
-        ? /*html*/ `<button
-            class="font-medium"
-            hx-delete="/todo/${id}"
-            hx-target="#todos"
-          >
-            Delete
-          </button>`
-        : ''
-    }
+    ${!completed
+      ? html`<button
+          class="font-medium"
+          hx-delete="/todo/${id}"
+          hx-target="#todos"
+        >
+          Delete
+        </button>`
+      : ''}
   </div>
 `
 
 export const renderTodosDone = (done: number) =>
-  /*html*/ ` <span id="done"> Completed (${done}) </span>`
+  html` <span id="done"> Completed (${done.toString()}) </span>`
 
-export const renderTodosContainer = (todos: Array<Todo>) => /*html*/ `
+export const renderTodosContainer = (todos: Array<Todo>) => html`
   <h1 class="text-4xl font-bold mb-4">
     <a href="/">Todo</a>
   </h1>
@@ -70,12 +70,13 @@ export const renderTodosContainer = (todos: Array<Todo>) => /*html*/ `
   ></div>
 `
 
-export const renderTodos = (todos: Array<Todo>) => /*html*/ ` <div id="todos">
+export const renderTodos = (todos: Array<Todo>) =>
+  html` <div id="todos">
     <ul>
       ${todos
         .filter(({ completed }) => completed === false)
         .map(({ title, id, completed }) => {
-          return /*html*/ `<li>
+          return html`<li>
             ${renderTodo({
               title: title,
               id: id,
@@ -112,13 +113,13 @@ export const renderTodos = (todos: Array<Todo>) => /*html*/ ` <div id="todos">
           ${todos
             .filter(({ completed }) => completed === true)
             .map(({ title, id, completed }) => {
-              return /*html*/ `<li>
-              ${renderTodo({
-                title: title,
-                id: id,
-                completed: completed,
-              })}
-            </li>`
+              return html`<li>
+                ${renderTodo({
+                  title: title,
+                  id: id,
+                  completed: completed,
+                })}
+              </li>`
             })
             .join('')}
         </ul>
