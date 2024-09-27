@@ -31,9 +31,7 @@ const serializedCookie = await serializeSigned(
       partitioned: true,
     }
   );
-  console.log({ serializedCookie });
   const cookie: SignedCookie = await parseSigned(serializedCookie, secret);
-  console.log({ cookie });
   await context.addCookies([
     {
       name: "session",
@@ -46,7 +44,6 @@ const serializedCookie = await serializeSigned(
     },
   ]);
 
-  console.log(await context.cookies());
 
  */
 

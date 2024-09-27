@@ -17,14 +17,12 @@ const schema = z.object({
 
 export const validator = zValidator('form', schema, (result, c) => {
   if (!result.success) {
-    console.log('aaaaaaaaaaaaaaaaaa')
     return c.text(result.error.issues[0].message, 403)
   }
   return
 })
 
 export default async (c: Context) => {
-  console.log('bbbbbbbbbbbbbbbbb')
   const db = c.get('db') as Low<Database>
   const username = c.get('username')
   const formData = await c.req.formData()

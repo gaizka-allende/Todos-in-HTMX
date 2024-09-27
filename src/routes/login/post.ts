@@ -55,7 +55,7 @@ export default async (c: Context) => {
     throw new HTTPException(401, { res })
   }
 
-  console.log('login successful')
+  //'login successful'
 
   await setSignedCookie(c, 'session', `${username},${Date.now()}`, secret, {
     path: '/',
