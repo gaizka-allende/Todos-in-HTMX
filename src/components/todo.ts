@@ -44,9 +44,8 @@ export const renderTodosContainer = (todos: Array<Todo>) => html`
   <form
     hx-post="/todo"
     hx-target="#todos"
-    _="on htmx:afterRequest reset() me"
     class="mb-4"
-    hx-indicator="#adding-item"
+    hx-target-403="#error-add-todo"
   >
     <div class="mb-2 flex">
       <input
@@ -62,12 +61,9 @@ export const renderTodosContainer = (todos: Array<Todo>) => html`
         Add
       </button>
     </div>
+    <div id="error-add-todo" class="text-red-500 text-sm"></div>
+    ${renderTodos(todos)}
   </form>
-  ${renderTodos(todos)}
-  <div
-    role="status"
-    class="transition-[display] ease-in hidden max-w-sm animate-pulse h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"
-  ></div>
 `
 
 export const renderTodos = (todos: Array<Todo>) =>

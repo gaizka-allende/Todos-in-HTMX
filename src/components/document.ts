@@ -10,11 +10,6 @@ export const renderHTMLDocument = (children: string) => html`
       <script src="https://unpkg.com/hyperscript.org@0.9.12/dist/_hyperscript.min.js"></script>
       <script src="https://cdn.tailwindcss.com"></script>
       <title>Todos</title>
-      <style>
-        #adding-item.htmx-request {
-          display: flex;
-        }
-      </style>
     </head>
     <body>
       <div
