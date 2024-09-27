@@ -1,5 +1,7 @@
 import { Context } from 'hono'
 import { Low } from 'lowdb'
+import { z } from 'zod'
+import { zValidator } from '@hono/zod-validator'
 
 import { setSignedCookie } from 'hono/cookie'
 import { HTTPException } from 'hono/http-exception'
@@ -8,6 +10,31 @@ import { Database } from '../../types'
 import { renderHTMLDocument } from '../../components/document'
 import { renderTodosContainer } from '../../components/todo'
 import { secret } from '../../utils/utils'
+
+const schema = z.object({
+  username: z
+    .string({
+      required_error: 'Username is required',
+    })
+    .regex(/^[a-z0-9]+$/, {
+      message: 'Username must contain only letters or numbers',
+    })
+    .min(6, { message: 'Username must be at least 6 characters long' })
+    .max(20, { message: 'Username must be at most 20 characters long' }),
+  password: z
+    .string({
+      required_error: 'Password is required',
+    })
+    .min(8, { message: 'Password must be at least 8 characters long' })
+    .max(20, { message: 'Password must be at most 20 characters long' }),
+})
+
+export const validatior = zValidator('form', schema, (result, c) => {
+  if (!result.success) {
+    return c.text(result.error.issues[0].message, 400)
+  }
+  return
+})
 
 export default async (c: Context) => {
   const db = c.get('db') as Low<Database>
