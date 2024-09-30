@@ -16,7 +16,7 @@ const schema = z.object({
     .string({
       required_error: 'Username is required',
     })
-    .regex(/^[a-z0-9]+$/, {
+    .regex(/^[A-Za-z0-9_-]+$/, {
       message: 'Username must contain only letters or numbers',
     })
     .min(6, { message: 'Username must be at least 6 characters long' })
