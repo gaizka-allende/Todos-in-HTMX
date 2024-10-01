@@ -7,7 +7,7 @@ import { setSignedCookie } from 'hono/cookie'
 import { HTTPException } from 'hono/http-exception'
 
 import { Database } from '../../types'
-import { renderHTMLDocument } from '../../components/document'
+import screen from '../../components/document'
 import { renderTodosContainer } from '../../components/todo'
 import { secret } from '../../utils/utils'
 
@@ -68,7 +68,5 @@ export default async (c: Context) => {
 
   if (!db.data.todos[username]) db.data.todos[username] = []
   c.res.headers.set('HX-Redirect', '/todos')
-  return c.html(
-    renderHTMLDocument(renderTodosContainer(db.data.todos[username])),
-  )
+  return c.html(screen`${renderTodosContainer(db.data.todos[username])}`)
 }

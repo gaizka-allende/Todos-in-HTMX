@@ -4,7 +4,7 @@ import { serializeSigned } from 'hono/utils/cookie'
 import { secret } from '../src/utils/utils'
 import html from '../src/utils/html'
 import { renderTodos, renderTodosContainer } from '../src/components/todo'
-import { renderHTMLDocument } from '../src/components/document'
+import screen from '../src/components/document'
 import { response } from '../src/routes/todo/put'
 
 test.beforeEach('create a login session', async ({ context }) => {
@@ -46,7 +46,7 @@ test('add a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${renderHTMLDocument(renderTodosContainer([]))}`,
+      body: html`${screen`${renderTodosContainer([])}`}`,
     })
   })
 
@@ -88,15 +88,15 @@ test('delete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${renderHTMLDocument(
-        renderTodosContainer([
+      body: html`${screen`
+        ${renderTodosContainer([
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
             completed: false,
           },
-        ]),
-      )}`,
+        ])}
+      `}`,
     })
   })
 
@@ -132,15 +132,15 @@ test('complete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${renderHTMLDocument(
-        renderTodosContainer([
+      body: html`${screen`
+        ${renderTodosContainer([
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
             completed: false,
           },
-        ]),
-      )}`,
+        ])}
+      `}`,
     })
   })
 
@@ -184,15 +184,15 @@ test('uncomplete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${renderHTMLDocument(
-        renderTodosContainer([
+      body: html`${screen`
+        ${renderTodosContainer([
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
             completed: true,
           },
-        ]),
-      )}`,
+        ])}
+      `}`,
     })
   })
 
@@ -235,15 +235,15 @@ test('edit a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${renderHTMLDocument(
-        renderTodosContainer([
+      body: html`${screen`
+        ${renderTodosContainer([
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
             completed: false,
           },
-        ]),
-      )}`,
+        ])}
+      `}`,
     })
   })
 
