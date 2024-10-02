@@ -3,8 +3,8 @@ import { serializeSigned } from 'hono/utils/cookie'
 
 import { secret } from '../src/utils/utils'
 import html from '../src/utils/html'
-import { renderTodos, renderTodosContainer } from '../src/fragments/todo'
-import screen from '../src/fragments/screen'
+import todos from '../src/screens/todos'
+import { renderTodos } from '../src/fragments/todo'
 import { response } from '../src/routes/todo/put'
 
 test.beforeEach('create a login session', async ({ context }) => {
@@ -46,7 +46,7 @@ test('add a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${screen`${renderTodosContainer([])}`}`,
+      body: html`${todos`${renderTodos([])}`}`,
     })
   })
 
@@ -88,8 +88,8 @@ test('delete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${screen`
-        ${renderTodosContainer([
+      body: html`${todos`
+        ${renderTodos([
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
@@ -132,8 +132,8 @@ test('complete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${screen`
-        ${renderTodosContainer([
+      body: html`${todos`
+        ${renderTodos([
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
@@ -184,8 +184,8 @@ test('uncomplete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${screen`
-        ${renderTodosContainer([
+      body: html`${todos`
+        ${renderTodos([
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
@@ -235,8 +235,8 @@ test('edit a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${screen`
-        ${renderTodosContainer([
+      body: html`${todos`
+        ${renderTodos([
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',

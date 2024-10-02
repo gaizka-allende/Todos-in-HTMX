@@ -33,34 +33,6 @@ export const renderTodo = ({ title, id, completed }: Todo) => html`
       : ''}
   </div>
 `
-export const renderTodosContainer = (todos: Array<Todo>) => html`
-  <h1 class="text-4xl font-bold mb-4">
-    <a href="/">Todo</a>
-  </h1>
-  <form
-    hx-post="/todo"
-    hx-target="#todos"
-    class="mb-4"
-    hx-target-403="#error-add-todo"
-  >
-    <div class="mb-2 flex">
-      <input
-        name="title"
-        type="text"
-        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5 mr-2"
-        data-testid="add-todo"
-      />
-      <button
-        class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2 text-center"
-        type="submit"
-      >
-        Add
-      </button>
-    </div>
-    <div id="error-add-todo" class="text-red-500 text-sm"></div>
-    ${renderTodos(todos)}
-  </form>
-`
 
 export const renderTodos = (todos: Array<Todo>) =>
   html` <div id="todos">

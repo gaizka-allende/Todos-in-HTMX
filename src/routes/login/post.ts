@@ -7,8 +7,8 @@ import { setSignedCookie } from 'hono/cookie'
 import { HTTPException } from 'hono/http-exception'
 
 import { Database } from '../../types'
-import screen from '../../fragments/screen'
-import { renderTodosContainer } from '../../fragments/todo'
+import todos from '../../screens/todos'
+import { renderTodos } from '../../fragments/todo'
 import { secret } from '../../utils/utils'
 
 const schema = z.object({
@@ -68,5 +68,5 @@ export default async (c: Context) => {
 
   if (!db.data.todos[username]) db.data.todos[username] = []
   c.res.headers.set('HX-Redirect', '/todos')
-  return c.html(screen`${renderTodosContainer(db.data.todos[username])}`)
+  return c.html(todos`${renderTodos(db.data.todos[username])}}`)
 }
