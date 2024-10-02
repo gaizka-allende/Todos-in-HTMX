@@ -33,10 +33,6 @@ export const renderTodo = ({ title, id, completed }: Todo) => html`
       : ''}
   </div>
 `
-
-export const renderTodosDone = (done: number) =>
-  html` <span id="done"> Completed (${done.toString()}) </span>`
-
 export const renderTodosContainer = (todos: Array<Todo>) => html`
   <h1 class="text-4xl font-bold mb-4">
     <a href="/">Todo</a>
