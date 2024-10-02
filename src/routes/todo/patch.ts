@@ -2,7 +2,7 @@ import { Context } from 'hono'
 import { Low } from 'lowdb'
 
 import { Database, Todo } from '../../types'
-import { renderTodos } from '../../components/todo'
+import { renderTodos } from '../../fragments/todo'
 import html from '../../utils/html'
 
 export default async (c: Context) => {

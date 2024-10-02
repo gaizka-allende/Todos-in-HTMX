@@ -1,6 +1,6 @@
 import { Context } from 'hono'
 
-import screen from '../../components/screen'
+import screen from '../../fragments/screen'
 
 export default async (c: Context) => {
   return c.html(screen`

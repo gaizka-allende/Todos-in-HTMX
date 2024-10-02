@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
 
 import { Database } from '../../types'
-import { renderTodos } from '../../components/todo'
+import { renderTodos } from '../../fragments/todo'
 import html from '../../utils/html'
 
 const schema = z.object({

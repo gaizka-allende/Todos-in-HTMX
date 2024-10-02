@@ -3,8 +3,8 @@ import { serializeSigned } from 'hono/utils/cookie'
 
 import { secret } from '../src/utils/utils'
 import html from '../src/utils/html'
-import { renderTodos, renderTodosContainer } from '../src/components/todo'
-import screen from '../src/components/screen'
+import { renderTodos, renderTodosContainer } from '../src/fragments/todo'
+import screen from '../src/fragments/screen'
 import { response } from '../src/routes/todo/put'
 
 test.beforeEach('create a login session', async ({ context }) => {

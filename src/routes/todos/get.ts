@@ -2,8 +2,8 @@ import { Context } from 'hono'
 import { Low } from 'lowdb'
 
 import { Database } from '../../types'
-import screen from '../../components/screen'
-import { renderTodosContainer } from '../../components/todo'
+import screen from '../../fragments/screen'
+import { renderTodosContainer } from '../../fragments/todo'
 
 export const response = (id: string) => `PUT /todo/${id}`
 

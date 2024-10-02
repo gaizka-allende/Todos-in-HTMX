@@ -7,8 +7,8 @@ import { setSignedCookie } from 'hono/cookie'
 import { HTTPException } from 'hono/http-exception'
 
 import { Database } from '../../types'
-import screen from '../../components/screen'
-import { renderTodosContainer } from '../../components/todo'
+import screen from '../../fragments/screen'
+import { renderTodosContainer } from '../../fragments/todo'
 import { secret } from '../../utils/utils'
 
 const schema = z.object({
