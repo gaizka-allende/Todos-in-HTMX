@@ -7,7 +7,7 @@ import { setSignedCookie } from 'hono/cookie'
 import { HTTPException } from 'hono/http-exception'
 
 import { Database } from '../../types'
-import screen from '../../components/document'
+import screen from '../../components/screen'
 import { renderTodosContainer } from '../../components/todo'
 import { secret } from '../../utils/utils'
 

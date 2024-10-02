@@ -2,7 +2,7 @@ import { Context } from 'hono'
 import { Low } from 'lowdb'
 
 import { Database } from '../../types'
-import screen from '../../components/document'
+import screen from '../../components/screen'
 import { renderTodosContainer } from '../../components/todo'
 
 export const response = (id: string) => `PUT /todo/${id}`
