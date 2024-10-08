@@ -56,7 +56,7 @@ import { routes } from './routes/index'
         return
       }
       //no session cookie
-      if (c.req.path === '/login') {
+      if (c.req.path === '/login' || c.req.path === '/register') {
         await next()
         return
       }
