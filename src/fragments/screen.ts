@@ -40,7 +40,7 @@ export default function screen(
       <body>
         <div
           id="screen"
-          class="mt-[50px] lg:mt-[100px] mb-0 mx-auto md:w-[450px]"
+          class="mt-[50px] lg:mt-[100px] mb-0 mx-auto md:w-[450px] relative"
           hx-ext="response-targets"
         >
           ${out}

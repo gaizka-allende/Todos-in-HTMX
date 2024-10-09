@@ -69,5 +69,6 @@ export default async (c: Context) => {
 
   if (!db.data.todos[username]) db.data.todos[username] = []
   c.res.headers.set('HX-Redirect', '/todos')
+
   return c.html(todos`${renderTodos(db.data.todos[username])}}`)
 }
