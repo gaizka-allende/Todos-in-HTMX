@@ -3,89 +3,9 @@
     {
       "username": "success_login",
       "password": "success_password"
-    },
-    {
-      "username": "gaizka",
-      "password": "12345678"
-    },
-    {
-      "username": "victoria",
-      "password": "12345678"
-    }
-  ],
-  "users": [
-    {
-      "id": "1",
-      "name": "Gaizka Allende",
-      "email": "gaizka@allende.org"
     }
   ],
   "todos": {
-    "success_login": [],
-    "failed_login": [],
-    "gaizka": [
-      {
-        "id": "918f0c65-65bf-42c3-a622-977e5e752724",
-        "title": "xxxxxxxxxxxx",
-        "completed": true
-      },
-      {
-        "id": "51dd33b9-b2b2-480f-94cd-b1e3f27a5e02",
-        "title": "ooooooooooo",
-        "completed": true
-      },
-      {
-        "id": "1fe253c8-3c01-404e-ac2c-9de43129479a",
-        "title": "kkkkkkkkkkkkkkk",
-        "completed": true
-      },
-      {
-        "id": "dc9bc9e6-8dc7-4cc6-ba42-603b8d454993",
-        "title": "fffffff",
-        "completed": true
-      },
-      {
-        "id": "23ac642d-d4d4-4344-bd77-e8a24b812417",
-        "title": "pppppppppppp",
-        "completed": true
-      },
-      {
-        "id": "32f131b9-4589-499a-a7a4-a5e4a7c26482",
-        "title": "jffdhlkfsdfsd",
-        "completed": false
-      },
-      {
-        "id": "c6f4d7be-a328-4661-b87f-fef33f982332",
-        "title": "fsdfasfdsafd",
-        "completed": false
-      },
-      {
-        "id": "6b7f2fe8-5471-48fa-82de-176f134740e0",
-        "title": "gggggggggggggg",
-        "completed": true
-      },
-      {
-        "id": "51c3b872-da87-400f-bcdf-bc7b91621f9b",
-        "title": "sadfhsafdfsad",
-        "completed": true
-      },
-      {
-        "id": "a76eeebe-ba91-46a6-b2c3-bdc13bc3d6f5",
-        "title": "444444444444",
-        "completed": false
-      }
-    ],
-    "victoria": [
-      {
-        "id": "a3772fd0-490f-4508-abb3-07d8646aa271",
-        "title": "uuuuuuuu",
-        "completed": true
-      },
-      {
-        "id": "5cc8141c-4fb3-46f0-b57e-7f0e2a13b515",
-        "title": "999999999",
-        "completed": true
-      }
-    ]
+    "success_login": []
   }
 }
