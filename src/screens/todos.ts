@@ -35,9 +35,20 @@ export default function todos(
       hx-target="#todos"
       class="mb-4"
       hx-target-403="#error-add-todo"
+  
     >
       <div class="mb-2 flex">
         <input
+          _="on keyup 
+              debounced at 1000ms
+              if event.target.value.length < 3
+                remove #suggestions
+                exit
+              end
+              fetch ${'`/suggestions?title=${event.target.value}`'}
+              put result after #error-add-todo 
+             end"
+          value=""
           name="title"
           type="text"
           class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5 mr-2"

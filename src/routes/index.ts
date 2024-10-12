@@ -14,6 +14,7 @@ import registerGet from './register/get'
 import registerPost from './register/post'
 import { validator as registerValidator } from './register/post'
 import logoutGet from './logout/get'
+import suggestionsGet from './suggestions/get'
 
 export const routes = (app: Hono<{ Variables: ContextConstants }>) => {
   app.get('/login', loginGet)
@@ -26,4 +27,5 @@ export const routes = (app: Hono<{ Variables: ContextConstants }>) => {
   app.patch('/todo/:id', patch)
   app.post('/todo', postValidator, post)
   app.get('/logout', logoutGet)
+  app.get('/suggestions', suggestionsGet)
 }

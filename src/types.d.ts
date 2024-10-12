@@ -3,6 +3,7 @@ import { Low } from 'lowdb'
 export type Database = {
   todos: { [username: string]: Array<Todo> }
   logins: Array<Login>
+  suggestions: Array<string>
 }
 export interface Todo {
   id: string

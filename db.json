@@ -7,5 +7,6 @@
   ],
   "todos": {
     "success_login": []
-  }
+  },
+  "suggestions": ["buy milk", "buy suggar", "do the laundry", "go to the gym"]
 }

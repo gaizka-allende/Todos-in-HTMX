@@ -15,6 +15,7 @@ import { routes } from './routes/index'
   const defaultData = {
     todos: {},
     logins: [],
+    suggestions: [],
   }
   const db = await JSONFilePreset<Database>('db.json', defaultData)
 
