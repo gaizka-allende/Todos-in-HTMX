@@ -24,18 +24,22 @@ absolute w-[75%] opacity-90 p-2.5 "
     >
       <ul>
         ${suggestions
-          .map(
-            suggestion =>
-              html`<li
-                class="text-base py-0.5 cursor-pointer border-b border-gray-300"
-                _="on click 
+          .map(suggestion => {
+            return html`<li
+              class="text-base py-0.5 cursor-pointer border-b border-gray-300"
+              _="on click 
                     put '${suggestion}' into value of .todoTitle
                     log 'clicked'
                   end"
-              >
-                ${suggestion}
-              </li>`,
-          )
+            >
+              <span>
+                ${suggestion.slice(0, suggestion.indexOf(title))}<span
+                  class="bg-yellow-300"
+                  >${title}</span
+                >${suggestion.slice(suggestion.indexOf(title) + title.length)}
+              </span>
+            </li>`
+          })
           .join('')
           .toString()}
       </ul>
