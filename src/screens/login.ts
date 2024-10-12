@@ -35,6 +35,13 @@ export default function login(
       hx-target-401="#error"
       hx-target-400="#error"
       hx-disabled-elt="input[type='text'], button"
+      hx-replace-url="/loading"
+      hx-on::before-request="
+        document.getElementById('loading')?.classList.remove('hidden')
+      "
+      hx-on::after-request="
+        document.getElementById('loading')?.classList.add('hidden')
+     "
     >
       <div class="mb-2 flex items-center justify-between">
         <label for="username" class="md:mr-2"> Username </label>
@@ -61,7 +68,6 @@ export default function login(
           id="submit"
           type="submit"
           class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2 text-center disabled:cursor-not-allowed disabled:opacity-25"
-          _="on click remove .hidden from #loading"
         >
           Submit
         </button>
@@ -69,7 +75,10 @@ export default function login(
       <div id="error" class="text-red-500 text-sm"></div>
     </form>
 
-    <div id="loading" class="hidden transition ease-in-out delay-150 h-full w-full bg-white absolute top-0 flex justify-center items-center">
+    <div
+      id="loading"
+      class="hidden transition ease-in-out delay-150 h-full w-full bg-white absolute top-0 flex justify-center items-center"
+    >
       Loading ...
     </div>
   `
