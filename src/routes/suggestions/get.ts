@@ -26,7 +26,7 @@ absolute w-[75%] opacity-90 p-2.5 "
         ${suggestions
           .map(suggestion => {
             return html`<li
-              class="text-base py-0.5 cursor-pointer border-b border-gray-300"
+              class="text-base py-0.5 cursor-pointer [&:not(:last-child)]:border-b border-gray-300"
               _="on click 
                     put '${suggestion}' into value of .todoTitle
                     log 'clicked'
