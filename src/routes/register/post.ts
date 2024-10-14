@@ -53,20 +53,18 @@ export const validator = zValidator('form', schema, (result, c) => {
 
 export default async (c: Context) => {
   const db = c.get('db') as Low<Database>
+  const knex = c.get('knex')
   const formData = await c.req.formData()
   const username = formData.get('username') as string
   const password = formData.get('password') as string
 
-  const user = db.data.logins.find(login => login.username === username)
+  const user = await knex('logins').where('username', username).first()
 
   if (user) {
     return c.text('User already exists', 409)
   }
 
-  db.data.logins.push({
-    username,
-    password,
-  })
+  await knex('logins').insert({ username, password })
 
   //register successful
 

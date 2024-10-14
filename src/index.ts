@@ -9,12 +9,25 @@ import { add, isBefore } from 'date-fns'
 import { secret } from './utils/utils'
 import { Database, ContextConstants } from './types'
 import { routes } from './routes/index'
+import { knex } from './utils/database'
 ;(async () => {
+  //try {
+  //const result = await knex.raw('SELECT * from logins')
+  //console.log(result.rows)
+  //console.log('Connected to Postgres via Knex')
+
+  ////return knex
+  //} catch (error) {
+  //console.log(
+  //'Unable to connect to Postgres via Knex. Ensure a valid connection.',
+  //)
+  //console.error(error)
+  //}
+
   const app = new Hono<{ Variables: ContextConstants }>()
 
   const defaultData = {
     todos: {},
-    logins: [],
     suggestions: [],
   }
   const db = await JSONFilePreset<Database>('db.json', defaultData)
@@ -23,6 +36,7 @@ import { routes } from './routes/index'
     '*',
     createMiddleware(async (c, next) => {
       c.set('db', db)
+      c.set('knex', knex)
 
       // TODO handle post from the todos form without a session cookie
       const session = (await getSignedCookie(c, secret, 'session')) as
@@ -45,9 +59,11 @@ import { routes } from './routes/index'
 
       const [username, sessionDateTimestamp] = session.split(',')
 
-      const { logins } = db.data
-
-      if (!logins.find(login => login.username === username)) {
+      const result = await knex
+        .select('*')
+        .from('logins')
+        .where('username', username)
+      if (result.length === 0) {
         // invalid session's user name
         throw new HTTPException(401, {
           message: 'Invalid user name in session',

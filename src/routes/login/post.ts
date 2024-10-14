@@ -42,7 +42,8 @@ export default async (c: Context) => {
   const username = formData.get('username') as string
   const password = formData.get('password') as string
 
-  const user = db.data.logins.find(login => login.username === username)
+  const knex = c.get('knex')
+  const user = await knex('logins').where('username', username).first()
 
   if (!user || user.password !== password) {
     const res = new Response('Invalid username or password', {

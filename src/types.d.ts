@@ -2,7 +2,6 @@ import { Low } from 'lowdb'
 
 export type Database = {
   todos: { [username: string]: Array<Todo> }
-  logins: Array<Login>
   suggestions: Array<string>
 }
 export interface Todo {
@@ -14,8 +13,6 @@ export interface Todo {
 export interface Login {
   username: string
   password: string
-  realm?: string | undefined
-  hashFunction?: Function | undefined
 }
 
 export type ContextConstants = {
