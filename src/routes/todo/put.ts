@@ -1,26 +1,20 @@
 import { Context } from 'hono'
-import { Low } from 'lowdb'
 
-import { Database, Todo } from '../../types'
+import { renderTodos } from '../../fragments/todo'
+import html from '../../utils/html'
 
 export const response = (id: string) => `PUT /todo/${id}`
 
 export default async (c: Context) => {
-  const db = c.get('db') as Low<Database>
-  const username = c.get('username')
   const id = c.req.param('id')
-  const todo = db.data.todos[username].find(todo => todo.id === id) as Todo
   const formData = await c.req.formData()
   const title = formData.get(id) as string
 
-  const todos = [
-    ...db.data.todos[username].filter(todo => todo.id !== id),
-    { ...todo, title },
-  ]
-
-  db.data.todos[username] = todos
-  await db.write()
+  const knex = c.get('knex')
+  const todo = await knex('todos').where('id', id).first()
+  await knex('todos').where('id', id).update({ title })
   c.status(200)
 
-  return new Response(response(id))
+  const userTodos = await knex('todos').where('user_id', todo.user_id)
+  return c.body(html`${renderTodos(userTodos)}`)
 }

@@ -1,12 +1,9 @@
 import { Context } from 'hono'
-import { Low } from 'lowdb'
 import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
 
 import { setSignedCookie } from 'hono/cookie'
 
-import { Database } from '../../types'
-import todos from '../../screens/todos'
 import { renderTodos } from '../../fragments/todo'
 import { secret } from '../../utils/utils'
 
@@ -52,7 +49,6 @@ export const validator = zValidator('form', schema, (result, c) => {
 })
 
 export default async (c: Context) => {
-  const db = c.get('db') as Low<Database>
   const knex = c.get('knex')
   const formData = await c.req.formData()
   const username = formData.get('username') as string
@@ -77,7 +73,8 @@ export default async (c: Context) => {
     sameSite: 'Strict',
   })
 
-  if (!db.data.todos[username]) db.data.todos[username] = []
   c.res.headers.set('HX-Redirect', '/todos')
-  return c.html(todos`${renderTodos(db.data.todos[username])}}`)
+
+  const todos = await knex('todos').where('user_id', user.id)
+  return c.body(todos`${renderTodos(todos)}`)
 }

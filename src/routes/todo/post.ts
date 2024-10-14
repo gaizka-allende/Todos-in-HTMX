@@ -1,9 +1,7 @@
 import { Context } from 'hono'
-import { Low } from 'lowdb'
 import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
 
-import { Database } from '../../types'
 import { renderTodos } from '../../fragments/todo'
 import html from '../../utils/html'
 
@@ -23,17 +21,18 @@ export const validator = zValidator('form', schema, (result, c) => {
 })
 
 export default async (c: Context) => {
-  const db = c.get('db') as Low<Database>
   const username = c.get('username')
   const formData = await c.req.formData()
   const title = formData.get('title') as string
-  const id = crypto.randomUUID()
-  db.data.todos[username].push({
-    id,
+
+  const knex = c.get('knex')
+  const userId = (await knex('logins').where('username', username).first()).id
+  await knex('todos').insert({
+    user_id: userId,
     title,
     completed: false,
   })
-  await db.write()
+  const todos = await knex('todos').where('user_id', userId)
 
-  return c.body(html`${renderTodos(db.data.todos[username])}`)
+  return c.body(html`${renderTodos(todos)}`)
 }
