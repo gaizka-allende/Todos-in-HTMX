@@ -35,7 +35,7 @@ export default function todos(
       hx-target="#todos"
       class="mb-4"
       hx-target-403="#error-add-todo"
-  
+      hx-on::before-request="document.querySelector('#title').value=''"
     >
       <div class="mb-2 flex">
         <input
