@@ -12,6 +12,10 @@ export default async (c: Context) => {
     `%${title}%`,
   )) as { title: string }[]
 
+  if (suggestions.length === 0) {
+    return c.html(html``)
+  }
+
   return c.html(html`
     <div
       id="suggestions"
