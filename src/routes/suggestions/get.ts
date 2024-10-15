@@ -1,20 +1,16 @@
 import { Context } from 'hono'
-import { Low } from 'lowdb'
 
-import { Database } from '../../types'
 import html from '../../utils/html'
 
 export default async (c: Context) => {
   const title = c.req.query('title')?.toLocaleLowerCase() as string
-  const db = c.get('db') as Low<Database>
 
-  const suggestions = db.data.suggestions.filter(suggestion =>
-    suggestion.includes(title),
-  ) as string[]
-
-  if (suggestions.length === 0) {
-    return c.html('')
-  }
+  const knex = c.get('knex')
+  const suggestions = (await knex('suggestions').where(
+    'title',
+    'like',
+    `%${title}%`,
+  )) as { title: string }[]
 
   return c.html(html`
     <div
@@ -24,6 +20,7 @@ absolute w-[75%] opacity-90 p-2.5 "
     >
       <ul>
         ${suggestions
+          .map((suggestion: { title: string }) => suggestion.title)
           .map(suggestion => {
             return html`<li
               class="text-base py-0.5 cursor-pointer [&:not(:last-child)]:border-b border-gray-300"
