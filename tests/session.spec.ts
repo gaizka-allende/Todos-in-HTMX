@@ -110,5 +110,5 @@ test('redirect to /login when trying to hijack session', async ({
 
   await page.goto('http://localhost:3000/todos')
 
-  await page.waitForSelector('text=Invalid user session')
+  await page.waitForSelector('text=Invalid user name in session')
 })
