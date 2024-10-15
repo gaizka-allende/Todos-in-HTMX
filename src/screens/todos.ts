@@ -49,6 +49,7 @@ export default function todos(
               put result after #error-add-todo 
              end"
           value=""
+          id="title"
           name="title"
           type="text"
           class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2.5 mr-2"

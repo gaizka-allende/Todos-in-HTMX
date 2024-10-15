@@ -25,8 +25,8 @@ absolute w-[75%] opacity-90 p-2.5 "
             return html`<li
               class="text-base py-0.5 cursor-pointer [&:not(:last-child)]:border-b border-gray-300"
               _="on click 
-                    put '${suggestion}' into value of .todoTitle
-                    log 'clicked'
+                    put '${suggestion}' into value of #title 
+                    add .hidden to #suggestions
                   end"
             >
               <span>
