@@ -1,9 +1,3 @@
-import { Low } from 'lowdb'
-
-export type Database = {
-  todos: { [username: string]: Array<Todo> }
-  suggestions: Array<string>
-}
 export interface Todo {
   id: string
   title: string
@@ -16,6 +10,6 @@ export interface Login {
 }
 
 export type ContextConstants = {
-  db: Low<Database>
   username: string
+  knex: any
 }

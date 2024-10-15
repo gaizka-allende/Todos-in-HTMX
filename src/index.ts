@@ -1,13 +1,12 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { createMiddleware } from 'hono/factory'
-import { JSONFilePreset } from 'lowdb/node'
 import { HTTPException } from 'hono/http-exception'
 import { getSignedCookie } from 'hono/cookie'
 import { add, isBefore } from 'date-fns'
 
 import { secret } from './utils/utils'
-import { Database, ContextConstants } from './types'
+import { ContextConstants } from './types'
 import { routes } from './routes/index'
 import { knex } from './utils/database'
 ;(async () => {
@@ -26,16 +25,9 @@ import { knex } from './utils/database'
 
   const app = new Hono<{ Variables: ContextConstants }>()
 
-  const defaultData = {
-    todos: {},
-    suggestions: [],
-  }
-  const db = await JSONFilePreset<Database>('db.json', defaultData)
-
   app.use(
     '*',
     createMiddleware(async (c, next) => {
-      c.set('db', db)
       c.set('knex', knex)
 
       // TODO handle post from the todos form without a session cookie
