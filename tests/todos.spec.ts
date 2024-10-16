@@ -1,13 +1,17 @@
 import { test, expect } from '@playwright/test'
 import { serializeSigned } from 'hono/utils/cookie'
+import 'dotenv/config'
 
-import { secret } from '../src/utils/utils'
 import html from '../src/utils/html'
 import todos from '../src/screens/todos'
 import { renderTodos } from '../src/fragments/todo'
 import { response } from '../src/routes/todo/put'
 
 test.beforeEach('create a login session', async ({ context }) => {
+  const secret = process.env.SECRET
+  if (!secret) {
+    throw new Error('SECRET environment variable is required')
+  }
   const serializedCookie = await serializeSigned(
     'session',
     `success_login,${Date.now()}`,

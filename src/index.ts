@@ -5,7 +5,6 @@ import { HTTPException } from 'hono/http-exception'
 import { getSignedCookie } from 'hono/cookie'
 import { add, isBefore } from 'date-fns'
 
-import { secret } from './utils/utils'
 import { ContextConstants } from './types'
 import { routes } from './routes/index'
 import { knex } from './utils/database'
@@ -24,6 +23,17 @@ import { knex } from './utils/database'
   //}
 
   const app = new Hono<{ Variables: ContextConstants }>()
+
+  const secret = process.env.SECRET
+
+  if (!secret) {
+    throw new Error('SECRET environment variable is required')
+  }
+
+  app.use(async (c, next) => {
+    c.set('secret', secret)
+    await next()
+  })
 
   app.use(
     '*',

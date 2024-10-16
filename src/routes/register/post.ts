@@ -5,7 +5,6 @@ import { zValidator } from '@hono/zod-validator'
 import { setSignedCookie } from 'hono/cookie'
 
 import { renderTodos } from '../../fragments/todo'
-import { secret } from '../../utils/utils'
 
 const schema = z
   .object({
@@ -64,6 +63,7 @@ export default async (c: Context) => {
 
   //register successful
 
+  const secret = c.get('secret')
   await setSignedCookie(c, 'session', `${username},${Date.now()}`, secret, {
     path: '/',
     secure: true,

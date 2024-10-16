@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { serializeSigned } from 'hono/utils/cookie'
-
-import { secret } from '../src/utils/utils'
+import 'dotenv/config'
 
 //type Cookie = {
 //name: string;
@@ -81,6 +80,10 @@ test('redirect to /login when trying to hijack session', async ({
   page,
   context,
 }) => {
+  const secret = process.env.SECRET
+  if (!secret) {
+    throw new Error('SECRET environment variable is required')
+  }
   const serializedCookie = await serializeSigned(
     'session',
     `rogue_login,${Date.now()}`,

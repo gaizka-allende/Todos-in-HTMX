@@ -7,7 +7,6 @@ import { HTTPException } from 'hono/http-exception'
 
 import todos from '../../screens/todos'
 import { renderTodos } from '../../fragments/todo'
-import { secret } from '../../utils/utils'
 
 const schema = z.object({
   username: z
@@ -56,6 +55,7 @@ export default async (c: Context) => {
   //'login successful'
 
   const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
+  const secret = c.get('secret')
   await setSignedCookie(c, 'session', `${username},${expires}`, secret, {
     path: '/',
     secure: true,

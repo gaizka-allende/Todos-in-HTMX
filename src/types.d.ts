@@ -12,4 +12,5 @@ export interface Login {
 export type ContextConstants = {
   username: string
   knex: any
+  secret: string
 }
