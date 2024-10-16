@@ -15,6 +15,8 @@ export default async (c: Context) => {
   await knex('todos').where('id', id).update({ title })
   c.status(200)
 
-  const userTodos = await knex('todos').where('user_id', todo.user_id)
+  const userTodos = await knex('todos')
+    .where('user_id', todo.user_id)
+    .orderBy('title')
   return c.body(html`${renderTodos(userTodos)}`)
 }

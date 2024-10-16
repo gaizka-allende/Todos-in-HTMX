@@ -32,7 +32,7 @@ export default async (c: Context) => {
     title,
     completed: false,
   })
-  const todos = await knex('todos').where('user_id', userId)
+  const todos = await knex('todos').where('user_id', userId).orderBy('title')
 
   return c.body(html`${renderTodos(todos)}`)
 }
