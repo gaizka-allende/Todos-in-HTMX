@@ -21,6 +21,12 @@ export const renderTodo = ({ title, id, completed }: Todo) => html`
       hx-put="/todo/${id}"
       name="${id}"
       ${completed ? 'disabled' : ''}
+      _="on keydown 
+       if event.key == 'Enter'
+          -- prevent the default form submission and trigger the put request
+          event.preventDefault()
+          trigger change 
+        "
     />
     ${!completed
       ? html`<button
