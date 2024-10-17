@@ -2,7 +2,7 @@ import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { createMiddleware } from 'hono/factory'
 import { HTTPException } from 'hono/http-exception'
-import { getSignedCookie } from 'hono/cookie'
+import { getSignedCookie, setSignedCookie } from 'hono/cookie'
 import { add, isBefore } from 'date-fns'
 
 import { ContextConstants } from './types'
@@ -39,6 +39,7 @@ import { knex } from './utils/database'
     '*',
     createMiddleware(async (c, next) => {
       c.set('knex', knex)
+      const secret = c.get('secret')
 
       // TODO handle post from the todos form without a session cookie
       const session = (await getSignedCookie(c, secret, 'session')) as
@@ -59,8 +60,8 @@ import { knex } from './utils/database'
         return c.redirect('/login')
       }
 
+      // check if session's username is valid
       const [username, sessionDateTimestamp] = session.split(',')
-
       const result = await knex
         .select('*')
         .from('logins')
@@ -72,10 +73,10 @@ import { knex } from './utils/database'
         })
       }
 
-      //session's username is valid
+      // check if session is expired
       const sessionDate = new Date(parseInt(sessionDateTimestamp))
-      if (isBefore(add(sessionDate, { minutes: 5 }), new Date())) {
-        // session expired (after 5 minutes)
+      if (isBefore(add(sessionDate, { minutes: 10 }), new Date())) {
+        // session expired (after 10 minutes)
         // redirect to login screen
         if (c.req.path !== '/login') {
           return c.redirect('/login')
@@ -84,11 +85,26 @@ import { knex } from './utils/database'
         await next()
         return
       }
-      // session is valid (not expired) so redirect to todos if user tries to access login page
+      // session is valid (not expired) so redirect to todos if user tries to access login or register screen
       c.set('username', username)
-      if (c.req.path === '/' || c.req.path === '/login') {
+      if (
+        c.req.path === '/' ||
+        c.req.path === '/login' ||
+        c.req.path === '/register'
+      ) {
         return c.redirect('/todos')
       }
+
+      // renew the session timeout to 10 minutes
+      const expires = new Date(Date.now() + 1000 * 60 * 10)
+      await setSignedCookie(c, 'session', `${username},${expires}`, secret, {
+        path: '/',
+        secure: true,
+        httpOnly: true,
+        maxAge: 1000,
+        expires,
+        sameSite: 'Strict',
+      })
       await next()
       return
     }),

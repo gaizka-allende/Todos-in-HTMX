@@ -22,7 +22,7 @@ test.beforeEach('create a login session', async ({ context }) => {
       domain: 'localhost',
       httpOnly: true,
       maxAge: 1000,
-      expires: new Date(Date.UTC(2000, 11, 24, 10, 30, 59, 900)),
+      expires: new Date(Date.now() + 1000 * 60 * 10),
       sameSite: 'Strict',
       partitioned: true,
     },

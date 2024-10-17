@@ -25,7 +25,7 @@ const serializedCookie = await serializeSigned(
       domain: "localhost",
       httpOnly: true,
       maxAge: 1000,
-      expires: new Date(Date.UTC(2000, 11, 24, 10, 30, 59, 900)),
+      expires: new Date(Date.now() + 1000 * 60 * 10),
       sameSite: "Strict",
       partitioned: true,
     }
@@ -94,7 +94,7 @@ test('redirect to /login when trying to hijack session', async ({
       domain: 'localhost',
       httpOnly: true,
       maxAge: 1000,
-      expires: new Date(Date.UTC(2000, 11, 24, 10, 30, 59, 900)),
+      expires: new Date(Date.now() + 1000 * 60 * 10),
       sameSite: 'Strict',
       partitioned: true,
     },

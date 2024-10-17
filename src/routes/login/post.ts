@@ -54,7 +54,7 @@ export default async (c: Context) => {
 
   //'login successful'
 
-  const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
+  const expires = new Date(Date.now() + 1000 * 60 * 10)
   const secret = c.get('secret')
   await setSignedCookie(c, 'session', `${username},${expires}`, secret, {
     path: '/',
