@@ -17,7 +17,6 @@
     "pg": "^8.13.0",
     "playwright": "^1.42.1",
     "tsx": "^4.19.1",
-    "user-agents": "^1.1.150",
     "zod": "^3.22.4"
   },
   "devDependencies": {
