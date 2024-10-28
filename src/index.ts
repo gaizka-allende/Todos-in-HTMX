@@ -47,8 +47,8 @@ import { knex } from './utils/database'
         | undefined
         | false
 
+      // check if session cookie exists and if not redirect to login screen
       if (session === undefined || session === false) {
-        //no session cookie
         if (
           c.req.path === '/login' ||
           c.req.path === '/register' ||
@@ -67,7 +67,6 @@ import { knex } from './utils/database'
         .from('logins')
         .where('username', username)
       if (result.length === 0) {
-        // invalid session's user name
         throw new HTTPException(401, {
           message: 'Invalid user name in session',
         })
