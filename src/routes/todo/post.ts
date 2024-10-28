@@ -30,7 +30,7 @@ export default async (c: Context) => {
   await knex('todos').insert({
     user_id: userId,
     title,
-    completed: false,
+    completed: 0,
   })
   const todos = await knex('todos').where('user_id', userId).orderBy('title')
 

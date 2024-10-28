@@ -11,14 +11,23 @@ CREATE DATABASE "Todos"
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
 
+-- postgres
 CREATE TABLE logins (
-  ID SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(30),
+  password VARCHAR(30)
+);
+
+-- sqlite3
+CREATE TABLE logins (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   username VARCHAR(30),
   password VARCHAR(30)
 );
 
 insert into logins (username, password) values ('success_login', 'success_password')
 
+-- postgres
 CREATE TABLE todos (
   id SERIAL PRIMARY KEY,
   user_id SERIAL,
@@ -29,8 +38,24 @@ CREATE TABLE todos (
 	  references logins(id)
 );
 
+-- sqlite3
+CREATE TABLE todos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER,
+  title VARCHAR(30),
+  completed BOOLEAN,
+  foreign key(user_id) references logins(id)
+);
+
+-- postgres
 CREATE TABLE suggestions (
-  ID SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(30)
+);
+
+-- sqlite3
+CREATE TABLE suggestions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   title VARCHAR(30)
 );
 

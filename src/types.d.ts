@@ -1,7 +1,7 @@
 export interface Todo {
   id: string
   title: string
-  completed: boolean
+  completed: 0 | 1
 }
 
 export interface Login {

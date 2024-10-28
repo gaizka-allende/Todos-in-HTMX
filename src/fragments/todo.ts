@@ -44,7 +44,7 @@ export const renderTodos = (todos: Array<Todo>) =>
   html` <div id="todos">
     <ul>
       ${todos
-        .filter(({ completed }) => completed === false)
+        .filter(({ completed }) => completed === 0)
         .map(({ title, id, completed }) => {
           return html`<li>
             ${renderTodo({
@@ -76,7 +76,7 @@ export const renderTodos = (todos: Array<Todo>) =>
         <span id="done">
           Completed
           (${todos
-            .filter(({ completed }) => completed === true)
+            .filter(({ completed }) => completed === 1)
             .length.toString()})
         </span>
       </summary>
@@ -84,7 +84,7 @@ export const renderTodos = (todos: Array<Todo>) =>
       <article class="px-4 pb-4">
         <ul id="todos-done">
           ${todos
-            .filter(({ completed }) => completed === true)
+            .filter(({ completed }) => completed === 1)
             .map(({ title, id, completed }) => {
               return html`<li>
                 ${renderTodo({

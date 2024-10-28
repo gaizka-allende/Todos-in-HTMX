@@ -67,7 +67,7 @@ test('add a todo', async ({ page }) => {
         {
           title: 'buy milka',
           id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-          completed: false,
+          completed: 0,
         },
       ])}`,
     })
@@ -97,7 +97,7 @@ test('delete a todo', async ({ page }) => {
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-            completed: false,
+            completed: 0,
           },
         ])}
       `}`,
@@ -141,7 +141,7 @@ test('complete a todo', async ({ page }) => {
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-            completed: false,
+            completed: 0,
           },
         ])}
       `}`,
@@ -161,7 +161,7 @@ test('complete a todo', async ({ page }) => {
         {
           title: 'buy milk',
           id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-          completed: true,
+          completed: 0,
         },
       ]),
     })
@@ -193,7 +193,7 @@ test('uncomplete a todo', async ({ page }) => {
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-            completed: true,
+            completed: 1,
           },
         ])}
       `}`,
@@ -213,7 +213,7 @@ test('uncomplete a todo', async ({ page }) => {
         {
           title: 'buy milk',
           id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-          completed: false,
+          completed: 0,
         },
       ])}`,
     })
@@ -244,7 +244,7 @@ test('edit a todo', async ({ page }) => {
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-            completed: false,
+            completed: 0,
           },
         ])}
       `}`,

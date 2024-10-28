@@ -7,21 +7,16 @@ import { add, isBefore } from 'date-fns'
 
 import { ContextConstants } from './types'
 import { routes } from './routes/index'
-import { knex } from './utils/database'
+import knex from './utils/database'
+
+if (!knex || knex === null) {
+  console.log(
+    'Unable to connect to database via Knex. Ensure a valid connection.',
+  )
+  process.exit(1)
+}
+
 ;(async () => {
-  //try {
-  //const result = await knex.raw('SELECT * from logins')
-  //console.log(result.rows)
-  //console.log('Connected to Postgres via Knex')
-
-  ////return knex
-  //} catch (error) {
-  //console.log(
-  //'Unable to connect to Postgres via Knex. Ensure a valid connection.',
-  //)
-  //console.error(error)
-  //}
-
   const app = new Hono<{ Variables: ContextConstants }>()
 
   const secret = process.env.SECRET
@@ -62,6 +57,7 @@ import { knex } from './utils/database'
 
       // check if session's username is valid
       const [username, sessionDateTimestamp] = session.split(',')
+      //@ts-ignore knew is not null as it is checked above
       const result = await knex
         .select('*')
         .from('logins')
