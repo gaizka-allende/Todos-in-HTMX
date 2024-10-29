@@ -7,6 +7,7 @@ import { HTTPException } from 'hono/http-exception'
 
 import todos from '../../screens/todos'
 import { renderTodos } from '../../fragments/todo'
+import { compareSync } from 'bcrypt'
 
 const schema = z.object({
   username: z
@@ -41,7 +42,7 @@ export default async (c: Context) => {
   const knex = c.get('knex')
   const user = await knex('logins').where('username', username).first()
 
-  if (!user || user.password !== password) {
+  if (!user || !compareSync(password, user.password)) {
     const res = new Response('Invalid username or password', {
       status: 401,
       headers: {

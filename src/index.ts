@@ -10,7 +10,7 @@ import { routes } from './routes/index'
 import knex from './utils/database'
 
 if (!knex || knex === null) {
-  console.log(
+  console.error(
     'Unable to connect to database via Knex. Ensure a valid connection.',
   )
   process.exit(1)
@@ -109,7 +109,7 @@ if (!knex || knex === null) {
 
   const port = 3000
 
-  console.log(`Server running at http://localhost:${port}`)
+  console.info(`Server running at http://localhost:${port}`)
   serve({
     fetch: app.fetch,
     port,

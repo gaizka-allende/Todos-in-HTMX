@@ -15,14 +15,14 @@ CREATE DATABASE "Todos"
 CREATE TABLE logins (
   id SERIAL PRIMARY KEY,
   username VARCHAR(30),
-  password VARCHAR(30)
+  password VARCHAR(72)
 );
 
 -- sqlite3
 CREATE TABLE logins (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username VARCHAR(30),
-  password VARCHAR(30)
+  password VARCHAR(72)
 );
 
 insert into logins (username, password) values ('success_login', 'success_password')

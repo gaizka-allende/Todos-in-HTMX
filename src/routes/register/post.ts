@@ -1,6 +1,7 @@
 import { Context } from 'hono'
 import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
+import { hashSync } from 'bcrypt'
 
 import { setSignedCookie } from 'hono/cookie'
 
@@ -59,7 +60,8 @@ export default async (c: Context) => {
     return c.text('User already exists', 409)
   }
 
-  await knex('logins').insert({ username, password })
+  const hash = hashSync(password, 10)
+  await knex('logins').insert({ username, password: hash })
 
   //register successful
 
