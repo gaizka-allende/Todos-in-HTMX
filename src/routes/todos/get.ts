@@ -1,5 +1,6 @@
 import { Context } from 'hono'
 
+import document from '../../fragments/document'
 import todos from '../../screens/todos'
 import { renderTodos } from '../../fragments/todo'
 
@@ -10,5 +11,5 @@ export default async (c: Context) => {
   const userTodos = await knex('todos')
     .where({ user_id: userId })
     .orderBy('title')
-  return c.html(todos`${renderTodos(userTodos)}`)
+  return c.html(document`${todos`${renderTodos(userTodos)}`}`)
 }

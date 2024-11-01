@@ -3,6 +3,8 @@ import { Hono } from 'hono'
 import { createMiddleware } from 'hono/factory'
 import { HTTPException } from 'hono/http-exception'
 import { getSignedCookie, setSignedCookie } from 'hono/cookie'
+import { serveStatic } from '@hono/node-server/serve-static'
+
 import { add, isBefore } from 'date-fns'
 
 import { ContextConstants } from './types'
@@ -24,6 +26,8 @@ if (!knex || knex === null) {
   if (!secret) {
     throw new Error('SECRET environment variable is required')
   }
+
+  app.use('/static/*', serveStatic({ root: './' }))
 
   app.use(async (c, next) => {
     c.set('secret', secret)

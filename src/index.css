@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+@layer base {
+  select,
+  option {
+    @apply bg-white dark:bg-slate-800 text-slate-800 dark:text-white;
+  }
+}

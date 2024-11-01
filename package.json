@@ -2,7 +2,7 @@
   "scripts": {
     "tsc": "tsc -p ./tsconfig.json",
     "tsc:watch": "tsc -p ./tsconfig.json --watch",
-    "dev": "tsx watch src/index.ts",
+    "dev": "concurrently \"tsx watch src/index.ts\"  \"tailwindcss -i ./src/index.css -o ./static/index.css --watch\"",
     "test": "npx playwright test",
     "test-ui": "npx playwright test --ui",
     "prepare": "husky"
@@ -25,9 +25,13 @@
     "@playwright/test": "^1.44.1",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.11.17",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.0.1",
     "husky": "^9.1.5",
     "lint-staged": "^15.2.10",
+    "postcss": "^8.4.47",
     "prettier": "^3.3.3",
+    "tailwindcss": "^3.4.14",
     "tsc-files": "^1.1.4",
     "typed-htmx": "^0.3.1",
     "typescript": "^5.5.4"
