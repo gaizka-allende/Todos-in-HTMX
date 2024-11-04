@@ -31,7 +31,6 @@ export default function document(
     <html
       _="on load 
         if localStorage.theme is not empty
-          -- set @class to localStorage.theme
           if localStorage.theme equals 'dark'
             set @class to 'dark'
           else if localStorage.theme equals 'light'
