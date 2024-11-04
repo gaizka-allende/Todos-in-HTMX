@@ -1,4 +1,5 @@
 import { Context } from 'hono'
+import { formatISO } from 'date-fns'
 
 import { renderTodos } from '../../fragments/todo'
 import html from '../../utils/html'
@@ -8,7 +9,12 @@ export default async (c: Context) => {
 
   const knex = c.get('knex')
   const todo = await knex('todos').where('id', id).first()
-  await knex('todos').where('id', id).update({ completed: !todo.completed })
+  await knex('todos')
+    .where('id', id)
+    .update({
+      completed: !todo.completed,
+      created_modified: formatISO(new Date()),
+    })
 
   c.status(200)
 

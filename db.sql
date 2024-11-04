@@ -33,6 +33,7 @@ CREATE TABLE todos (
   user_id SERIAL,
   title VARCHAR(30),
   completed BOOLEAN,
+  created_modified TEXT,
   constraint fk_user_id
   	foreign key(user_id)
 	  references logins(id)
@@ -44,6 +45,7 @@ CREATE TABLE todos (
   user_id INTEGER,
   title VARCHAR(30),
   completed BOOLEAN,
+  created_modified TEXT,
   foreign key(user_id) references logins(id)
 );
 

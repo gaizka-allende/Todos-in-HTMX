@@ -2,6 +2,7 @@ export interface Todo {
   id: string
   title: string
   completed: 0 | 1
+  created_modified: string
 }
 
 export interface Login {

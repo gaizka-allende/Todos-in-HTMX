@@ -4,6 +4,7 @@ import { zValidator } from '@hono/zod-validator'
 
 import { renderTodos } from '../../fragments/todo'
 import html from '../../utils/html'
+import { formatISO } from 'date-fns'
 
 const schema = z.object({
   id: z.string().min(1).optional(),
@@ -31,6 +32,7 @@ export default async (c: Context) => {
     user_id: userId,
     title,
     completed: 0,
+    created_modified: formatISO(new Date()),
   })
   const todos = await knex('todos').where('user_id', userId).orderBy('title')
 

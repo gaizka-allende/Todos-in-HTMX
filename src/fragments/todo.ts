@@ -1,8 +1,41 @@
-import html from '../utils/html'
+import { differenceInCalendarDays } from 'date-fns'
 
+import html from '../utils/html'
 import { Todo } from '../types'
 
-export const renderTodo = ({ title, id, completed }: Todo) => html`
+const formatTodoDate = (created_modified: string) => {
+  const difference = differenceInCalendarDays(
+    new Date(),
+    new Date(created_modified),
+  )
+
+  if (difference === 0) {
+    return 'Today'
+  } else if (difference === 1) {
+    return 'Yesterday'
+  } else if (difference === 2) {
+    return 'Two days ago'
+  } else if (difference === 3) {
+    return 'Three days ago'
+  } else if (difference === 4) {
+    return 'Four days ago'
+  } else if (difference === 5) {
+    return 'Five days ago'
+  } else if (difference === 6) {
+    return 'Six days ago'
+  } else if (difference > 7 && difference < 14) {
+    return 'Last week'
+  } else {
+    return 'More than two weeks ago'
+  }
+}
+
+export const renderTodo = ({
+  title,
+  id,
+  completed,
+  created_modified,
+}: Todo) => html`
   <div class="item flex row items-center mb-2">
     <input
       role="checkbox"
@@ -30,13 +63,14 @@ export const renderTodo = ({ title, id, completed }: Todo) => html`
     />
     ${!completed
       ? html`<button
-          class="font-medium"
+          class="font-medium py-1 px-4 my-1 rounded-lg text-lg border bg-gray-100 text-gray-600 mr-2"
           hx-delete="/todo/${id}"
           hx-target="#todos"
         >
           Delete
         </button>`
       : ''}
+    <span class="mx-2 text-sm">${formatTodoDate(created_modified)}</span>
   </div>
 `
 
@@ -45,12 +79,13 @@ export const renderTodos = (todos: Array<Todo>) =>
     <ul>
       ${todos
         .filter(({ completed }) => completed === 0)
-        .map(({ title, id, completed }) => {
+        .map(({ title, id, completed, created_modified }) => {
           return html`<li>
             ${renderTodo({
               title: title,
               id: id,
               completed: completed,
+              created_modified,
             })}
           </li>`
         })
@@ -85,12 +120,13 @@ export const renderTodos = (todos: Array<Todo>) =>
         <ul id="todos-done">
           ${todos
             .filter(({ completed }) => completed === 1)
-            .map(({ title, id, completed }) => {
+            .map(({ title, id, completed, created_modified }) => {
               return html`<li>
                 ${renderTodo({
                   title: title,
                   id: id,
                   completed: completed,
+                  created_modified,
                 })}
               </li>`
             })

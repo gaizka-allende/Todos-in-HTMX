@@ -2,6 +2,7 @@ import { Context } from 'hono'
 
 import { renderTodos } from '../../fragments/todo'
 import html from '../../utils/html'
+import { formatISO } from 'date-fns'
 
 export const response = (id: string) => `PUT /todo/${id}`
 
@@ -12,7 +13,12 @@ export default async (c: Context) => {
 
   const knex = c.get('knex')
   const todo = await knex('todos').where('id', id).first()
-  await knex('todos').where('id', id).update({ title })
+  await knex('todos')
+    .where('id', id)
+    .update({
+      title,
+      created_modified: formatISO(new Date()),
+    })
   c.status(200)
 
   const userTodos = await knex('todos')

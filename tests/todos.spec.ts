@@ -6,6 +6,7 @@ import html from '../src/utils/html'
 import todos from '../src/screens/todos'
 import { renderTodos } from '../src/fragments/todo'
 import { response } from '../src/routes/todo/put'
+import { formatISO } from 'date-fns'
 
 test.beforeEach('create a login session', async ({ context }) => {
   const secret = process.env.SECRET
@@ -68,6 +69,7 @@ test('add a todo', async ({ page }) => {
           title: 'buy milka',
           id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
           completed: 0,
+          created_modified: formatISO(new Date()),
         },
       ])}`,
     })
@@ -98,6 +100,7 @@ test('delete a todo', async ({ page }) => {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
             completed: 0,
+            created_modified: formatISO(new Date()),
           },
         ])}
       `}`,
@@ -142,6 +145,7 @@ test('complete a todo', async ({ page }) => {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
             completed: 0,
+            created_modified: formatISO(new Date()),
           },
         ])}
       `}`,
@@ -162,6 +166,7 @@ test('complete a todo', async ({ page }) => {
           title: 'buy milk',
           id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
           completed: 0,
+          created_modified: formatISO(new Date()),
         },
       ]),
     })
@@ -194,6 +199,7 @@ test('uncomplete a todo', async ({ page }) => {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
             completed: 1,
+            created_modified: formatISO(new Date()),
           },
         ])}
       `}`,
@@ -214,6 +220,7 @@ test('uncomplete a todo', async ({ page }) => {
           title: 'buy milk',
           id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
           completed: 0,
+          created_modified: formatISO(new Date()),
         },
       ])}`,
     })
@@ -245,6 +252,7 @@ test('edit a todo', async ({ page }) => {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
             completed: 0,
+            created_modified: formatISO(new Date()),
           },
         ])}
       `}`,
