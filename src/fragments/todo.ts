@@ -2,86 +2,92 @@ import { differenceInCalendarDays } from 'date-fns'
 
 import html from '../utils/html'
 import { Todo } from '../types'
+import { Context } from 'hono'
 
-const formatTodoDate = (created_modified: string) => {
+function formatTodoDate(this: Context, created_modified: string) {
+  const t = this.get('t')
   const difference = differenceInCalendarDays(
     new Date(),
     new Date(created_modified),
   )
 
   if (difference === 0) {
-    return 'Today'
+    return t('today')
   } else if (difference === 1) {
-    return 'Yesterday'
+    return t('yesterday')
   } else if (difference === 2) {
-    return 'Two days ago'
+    return t('two_days_ago')
   } else if (difference === 3) {
-    return 'Three days ago'
+    return t('three_days_ago')
   } else if (difference === 4) {
-    return 'Four days ago'
+    return t('four_days_ago')
   } else if (difference === 5) {
-    return 'Five days ago'
+    return t('five_days_ago')
   } else if (difference === 6) {
-    return 'Six days ago'
-  } else if (difference > 7 && difference < 14) {
-    return 'Last week'
+    return t('six_days_ago')
+  } else if (difference >= 7 && difference < 14) {
+    return t('last_week')
   } else {
-    return 'More than two weeks ago'
+    return t('more_than_two_weeks_ago')
   }
 }
 
-export const renderTodo = ({
-  title,
-  id,
-  completed,
-  created_modified,
-}: Todo) => html`
-  <div class="item flex row items-center mb-2">
-    <input
-      role="checkbox"
-      type="checkbox"
-      class="mr-2"
-      name="checkbox"
-      hx-patch="/todo/${id}"
-      hx-target="#todos"
-      ${completed ? 'checked' : ''}
-    />
-    <input
-      role="textbox"
-      id="${id}"
-      class="font-medium py-1 px-4 my-1 rounded-lg text-lg border bg-gray-100 text-gray-600 mr-2"
-      value="${title}"
-      hx-put="/todo/${id}"
-      name="${id}"
-      ${completed ? 'disabled' : ''}
-      _="on keydown 
+export function renderTodo(
+  this: Context,
+  { title, id, completed, created_modified }: Todo,
+) {
+  const t = this.get('t')
+  return html`
+    <div class="item flex row items-center mb-2">
+      <input
+        role="checkbox"
+        type="checkbox"
+        class="mr-2"
+        name="checkbox"
+        hx-patch="/todo/${id}"
+        hx-target="#todos"
+        ${completed ? 'checked' : ''}
+      />
+      <input
+        role="textbox"
+        id="${id}"
+        class="font-medium py-1 px-4 my-1 rounded-lg text-lg border bg-gray-100 text-gray-600 mr-2"
+        value="${title}"
+        hx-put="/todo/${id}"
+        name="${id}"
+        ${completed ? 'disabled' : ''}
+        _="on keydown 
        if event.key == 'Enter'
           -- prevent the default form submission and trigger the put request
           event.preventDefault()
           trigger change 
         "
-    />
-    ${!completed
-      ? html`<button
-          class="font-medium py-1 px-4 my-1 rounded-lg text-lg border bg-gray-100 text-gray-600 mr-2"
-          hx-delete="/todo/${id}"
-          hx-target="#todos"
-        >
-          Delete
-        </button>`
-      : ''}
-    <span class="mx-2 text-sm">${formatTodoDate(created_modified)}</span>
-  </div>
-`
+      />
+      ${!completed
+        ? html`<button
+            class="font-medium py-1 px-4 my-1 rounded-lg text-lg border bg-gray-100 text-gray-600 mr-2"
+            hx-delete="/todo/${id}"
+            hx-target="#todos"
+          >
+            ${t('todo_delete')}
+          </button>`
+        : ''}
+      <span class="mx-2 text-sm"
+        >${formatTodoDate.bind(this)(created_modified)}</span
+      >
+    </div>
+  `
+}
 
-export const renderTodos = (todos: Array<Todo>) =>
-  html` <div id="todos">
+export function renderTodos(this: Context, todos: Array<Todo>) {
+  const t = this.get('t')
+  return html` <div id="todos">
     <ul>
       ${todos
         .filter(({ completed }) => completed === 0)
         .map(({ title, id, completed, created_modified }) => {
           return html`<li>
-            ${renderTodo({
+            ${renderTodo.bind(this)({
               title: title,
               id: id,
               completed: completed,
@@ -109,7 +115,7 @@ export const renderTodos = (todos: Array<Todo>) =>
           ></path>
         </svg>
         <span id="done">
-          Completed
+          ${t('completed')}
           (${todos
             .filter(({ completed }) => completed === 1)
             .length.toString()})
@@ -122,7 +128,7 @@ export const renderTodos = (todos: Array<Todo>) =>
             .filter(({ completed }) => completed === 1)
             .map(({ title, id, completed, created_modified }) => {
               return html`<li>
-                ${renderTodo({
+                ${renderTodo.bind(this)({
                   title: title,
                   id: id,
                   completed: completed,
@@ -135,3 +141,4 @@ export const renderTodos = (todos: Array<Todo>) =>
       </article>
     </details>
   </div>`
+}

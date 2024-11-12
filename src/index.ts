@@ -1,26 +1,23 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
+import { getCookie } from 'hono/cookie'
 import { createMiddleware } from 'hono/factory'
 import { HTTPException } from 'hono/http-exception'
 import { getSignedCookie, setSignedCookie } from 'hono/cookie'
 import { serveStatic } from '@hono/node-server/serve-static'
+//import { cache } from 'hono/cache'
 
 import { add, isBefore } from 'date-fns'
 
 import { ContextConstants } from './types'
 import { routes } from './routes/index'
 import knex from './utils/database'
-
-if (!knex || knex === null) {
-  console.error(
-    'Unable to connect to database via Knex. Ensure a valid connection.',
-  )
-  process.exit(1)
-}
-
+import i18next, { t } from './i18n/index'
 ;(async () => {
-  const app = new Hono<{ Variables: ContextConstants }>()
+  const i18n = await i18next
+  console.log(t('translations_loaded'))
 
+  const app = new Hono<{ Variables: ContextConstants }>()
   const secret = process.env.SECRET
 
   if (!secret) {
@@ -29,16 +26,46 @@ if (!knex || knex === null) {
 
   app.use('/static/*', serveStatic({ root: './' }))
 
-  app.use(async (c, next) => {
-    c.set('secret', secret)
-    await next()
-  })
+  //app.get(
+  //'*',
+  //cache({
+  //cacheName: 'todos',
+  //cacheControl: 'no-store',
+  //}),
+  //)
 
   app.use(
     '*',
     createMiddleware(async (c, next) => {
-      c.set('knex', knex)
-      const secret = c.get('secret')
+      const language_id = getCookie(c, 'language_id')
+      if (language_id) {
+        const translate = await i18n.changeLanguage(language_id)
+        c.set('t', translate)
+      } else {
+        c.set('t', t)
+      }
+
+      await next()
+    }),
+  )
+
+  app.use(
+    '*',
+    createMiddleware(async (c, next) => {
+      if (
+        c.req.path === '/login' ||
+        c.req.path === '/register' ||
+        c.req.path === '/logout' ||
+        c.req.path === '/language'
+      ) {
+        await next()
+        return
+      }
+
+      const secret = process.env.SECRET
+      if (!secret) {
+        throw new Error('SECRET environment variable is required')
+      }
 
       // TODO handle post from the todos form without a session cookie
       const session = (await getSignedCookie(c, secret, 'session')) as
@@ -46,16 +73,8 @@ if (!knex || knex === null) {
         | undefined
         | false
 
-      // check if session cookie exists and if not redirect to login screen
+      // check if session cookie exists and if not then redirect to login screen
       if (session === undefined || session === false) {
-        if (
-          c.req.path === '/login' ||
-          c.req.path === '/register' ||
-          c.req.path === '/logout'
-        ) {
-          await next()
-          return
-        }
         return c.redirect('/login')
       }
 
@@ -68,7 +87,7 @@ if (!knex || knex === null) {
         .where('username', username)
       if (result.length === 0) {
         throw new HTTPException(401, {
-          message: 'Invalid user name in session',
+          message: t('invalid_username_in_session'),
         })
       }
 

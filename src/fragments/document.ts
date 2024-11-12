@@ -1,9 +1,13 @@
+import { Context } from 'hono'
+
 import html from '../utils/html'
 
 export default function document(
+  this: Context,
   strings: TemplateStringsArray,
   ...values: string[]
 ) {
+  const t = this.get('t')
   let out = ''
   strings.forEach((string, i) => {
     const value = values[i]
@@ -51,13 +55,38 @@ export default function document(
         <script src="https://unpkg.com/htmx.org@1.9.12/dist/htmx.min.js"></script>
         <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/response-targets.js"></script>
         <script src="https://unpkg.com/hyperscript.org@0.9.12/dist/_hyperscript.min.js"></script>
-        <title>Todos</title>
+        <title>${t('document_title')}</title>
         <link href="/static/index.css" rel="stylesheet" />
       </head>
       <body class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white">
         <header class="flex justify-end m-2">
           <div>
-            <label for="theme">Select a theme:</label>
+            <select
+              name="language"
+              id="language"
+              hx-get="/language"
+              hx-trigger="change"
+              hx-select="#screen"
+              hx-target="#screen"
+              hx-swap="outerHTML"
+              _="
+              on change 
+                if event.target.value equals '' 
+                  halt the event
+                else
+                  set cookies.language_id to event.target.value
+                end
+                
+              end
+            "
+            >
+              <option value="">${t('select_a_language')}</option>
+              <option value="en">${t('english')}</option>
+              <option value="es">${t('spanish')}</option>
+            </select>
+          </div>
+          <div>
+            <label for="theme">${t('select_a_theme')}:</label>
             <select
               name="theme"
               id="theme"
@@ -69,7 +98,6 @@ export default function document(
                 end
             end
             on change 
-              log event.target.value
               if event.target.value equals 'dark' 
                 set @class of document.documentElement to 'dark' 
               else if event.target.value equals 'light'  
@@ -85,9 +113,9 @@ export default function document(
             end
             "
             >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="system">System</option>
+              <option value="light">${t('light')}</option>
+              <option value="dark">${t('dark')}</option>
+              <option value="system">${t('system')}</option>
             </select>
           </div>
         </header>

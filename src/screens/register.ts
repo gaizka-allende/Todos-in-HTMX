@@ -1,31 +1,10 @@
+import { Context } from 'hono'
+
 import screen from '../fragments/screen'
 
-export default function register(
-  strings: TemplateStringsArray,
-  ...values: string[]
-) {
-  let out = ''
-  strings.forEach((string, i) => {
-    const value = values[i]
+export default function register(this: Context, _1?: any, _2?: any) {
+  const t = this.get('t')
 
-    // Array - Join to string and output with value
-    if (Array.isArray(value)) {
-      out += string + value.join('')
-    }
-    // String - Output with value
-    else if (typeof value === 'string') {
-      out += string + value
-    }
-    // Number - Coerce to string and output with value
-    // This would happen anyway, but for clarity's sake on what's happening here
-    else if (typeof value === 'number') {
-      out += string + String(value)
-    }
-    // object, undefined, null, boolean - Don't output a value.
-    else {
-      out += string
-    }
-  })
   return screen`
     <form
       hx-post="/register"
@@ -38,7 +17,7 @@ export default function register(
       hx-disabled-elt="input[type='text'], button"
     >
       <div class="mb-2 flex items-center justify-between">
-        <label for="username" class="md:mr-2"> Username </label>
+        <label for="username" class="md:mr-2">${t('username')}</label>
         <input
           type="text"
           id="username"
@@ -48,7 +27,7 @@ export default function register(
         />
       </div>
       <div class="mb-2 flex items-center justify-between">
-        <label for="password" class="md:mr-2"> Password </label>
+        <label for="password" class="md:mr-2">${t('password')}</label>
         <input
           type="password"
           id="password"
@@ -58,7 +37,7 @@ export default function register(
         />
       </div>
       <div class="mb-2 flex items-center justify-between">
-        <label for="password" class="md:mr-2"> Re-enter password </label>
+        <label for="password" class="md:mr-2">${t('re_enter_password')}</label>
         <input
           type="password"
           id="reEnterPassword"
@@ -73,7 +52,7 @@ export default function register(
           type="submit"
           class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2 text-center disabled:cursor-not-allowed disabled:opacity-25"
         >
-          Submit
+          ${t('register')} 
         </button>
       </div>
       <div id="error" class="text-red-500 text-sm"></div>

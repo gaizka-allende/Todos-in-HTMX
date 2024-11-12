@@ -1,8 +1,9 @@
 import { Context } from 'hono'
+import { formatISO } from 'date-fns'
 
 import { renderTodos } from '../../fragments/todo'
 import html from '../../utils/html'
-import { formatISO } from 'date-fns'
+import knex from '../../utils/database'
 
 export const response = (id: string) => `PUT /todo/${id}`
 
@@ -11,7 +12,10 @@ export default async (c: Context) => {
   const formData = await c.req.formData()
   const title = formData.get(id) as string
 
-  const knex = c.get('knex')
+  if (!knex) {
+    throw new Error('knex is not defined')
+  }
+
   const todo = await knex('todos').where('id', id).first()
   await knex('todos')
     .where('id', id)
@@ -24,5 +28,5 @@ export default async (c: Context) => {
   const userTodos = await knex('todos')
     .where('user_id', todo.user_id)
     .orderBy('title')
-  return c.body(html`${renderTodos(userTodos)}`)
+  return c.body(html`${renderTodos.bind(c)(userTodos)}`)
 }

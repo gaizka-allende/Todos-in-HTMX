@@ -1,12 +1,17 @@
 import { test, expect } from '@playwright/test'
 import { serializeSigned } from 'hono/utils/cookie'
 import 'dotenv/config'
+import { t } from 'i18next'
 
 import html from '../src/utils/html'
 import todos from '../src/screens/todos'
 import { renderTodos } from '../src/fragments/todo'
 import { response } from '../src/routes/todo/put'
 import { formatISO } from 'date-fns'
+
+const c = {
+  get: () => t,
+}
 
 test.beforeEach('create a login session', async ({ context }) => {
   const secret = process.env.SECRET
@@ -51,7 +56,8 @@ test('add a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${todos`${renderTodos([])}`}`,
+      //@ts-expect-error c is just mocking the context without the same signature
+      body: html`${todos.bind(c)`${renderTodos([])}`}`,
     })
   })
 
@@ -64,7 +70,8 @@ test('add a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/text',
-      body: html`${renderTodos([
+      //@ts-expect-error c is just mocking the context without the same signature
+      body: html`${renderTodos.bind(c)([
         {
           title: 'buy milka',
           id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
@@ -94,8 +101,12 @@ test('delete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${todos`
-        ${renderTodos([
+      //@ts-expect-error c is just mocking the context without the same signature
+      body: html`${todos.bind(c)`
+        ${renderTodos.bind(
+          //@ts-expect-error c is just mocking the context without the same signature
+          c,
+        )([
           {
             title: 'buy milk',
             id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
@@ -116,7 +127,8 @@ test('delete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/text',
-      body: renderTodos([]),
+      //@ts-expect-error c is just mocking the context without the same signature
+      body: renderTodos.bind(c)([]),
     })
   })
 
@@ -139,15 +151,19 @@ test('complete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${todos`
-        ${renderTodos([
-          {
-            title: 'buy milk',
-            id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-            completed: 0,
-            created_modified: formatISO(new Date()),
-          },
-        ])}
+      //@ts-expect-error c is just mocking the context without the same signature
+      body: html`${todos.bind(c)`
+        ${
+          //@ts-expect-error c is just mocking the context without the same signature
+          renderTodos.bind(c)([
+            {
+              title: 'buy milk',
+              id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
+              completed: 0,
+              created_modified: formatISO(new Date()),
+            },
+          ])
+        }
       `}`,
     })
   })
@@ -161,7 +177,8 @@ test('complete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/text',
-      body: renderTodos([
+      //@ts-expect-error c is just mocking the context without the same signature
+      body: renderTodos.bind(c)([
         {
           title: 'buy milk',
           id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
@@ -193,15 +210,19 @@ test('uncomplete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${todos`
-        ${renderTodos([
-          {
-            title: 'buy milk',
-            id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-            completed: 1,
-            created_modified: formatISO(new Date()),
-          },
-        ])}
+      //@ts-expect-error c is just mocking the context without the same signature
+      body: html`${todos.bind(c)`
+        ${
+          //@ts-expect-error c is just mocking the context without the same signature
+          renderTodos.bind(c)([
+            {
+              title: 'buy milk',
+              id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
+              completed: 1,
+              created_modified: formatISO(new Date()),
+            },
+          ])
+        }
       `}`,
     })
   })
@@ -215,7 +236,8 @@ test('uncomplete a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/text',
-      body: html`${renderTodos([
+      //@ts-expect-error c is just mocking the context without the same signature
+      body: html`${renderTodos.bind(c)([
         {
           title: 'buy milk',
           id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
@@ -246,15 +268,19 @@ test('edit a todo', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'text/html',
-      body: html`${todos`
-        ${renderTodos([
-          {
-            title: 'buy milk',
-            id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-            completed: 0,
-            created_modified: formatISO(new Date()),
-          },
-        ])}
+      //@ts-expect-error c is just mocking the context without the same signature
+      body: html`${todos.bind(c)`
+        ${
+          //@ts-expect-error c is just mocking the context without the same signature
+          renderTodos.bind(c)([
+            {
+              title: 'buy milk',
+              id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
+              completed: 0,
+              created_modified: formatISO(new Date()),
+            },
+          ])
+        }
       `}`,
     })
   })

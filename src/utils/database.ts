@@ -48,4 +48,11 @@ if (databaseClient.toLowerCase() === 'sqlite3') {
   })
 }
 
+if (!knex || knex === null) {
+  console.error(
+    'Unable to connect to database via Knex. Ensure a valid connection.',
+  )
+  process.exit(1)
+}
+
 export default knex

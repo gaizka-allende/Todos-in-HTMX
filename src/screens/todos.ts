@@ -1,9 +1,13 @@
+import { Context } from 'hono'
+
 import screen from '../fragments/screen'
 
 export default function todos(
+  this: Context,
   strings: TemplateStringsArray,
   ...values: string[]
 ) {
+  const t = this.get('t')
   let out = ''
   strings.forEach((string, i) => {
     const value = values[i]
@@ -28,7 +32,7 @@ export default function todos(
   })
   return screen`
     <h1 class="text-4xl font-bold mb-4">
-      <a href="/">Todo</a>
+      <a href="/">${t('todo')}</a>
     </h1>
     <form
       hx-post="/todo"
@@ -59,7 +63,7 @@ export default function todos(
           class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2 text-center"
           type="submit"
         >
-          Add
+          ${t('add')}
         </button>
       </div>
       <div id="error-add-todo" class="text-red-500 text-sm"></div>

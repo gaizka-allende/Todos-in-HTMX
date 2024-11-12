@@ -1,63 +1,74 @@
 import { Context } from 'hono'
 import { z } from 'zod'
-import { zValidator } from '@hono/zod-validator'
 import { hashSync } from 'bcrypt'
-
 import { setSignedCookie } from 'hono/cookie'
 
 import { renderTodos } from '../../fragments/todo'
+import knex from '../../utils/database'
+import todos from '../../screens/todos'
 
-const schema = z
-  .object({
-    username: z
-      .string({
-        required_error: 'Username is required',
-      })
-      .regex(/^[A-Za-z0-9_-]+$/, {
-        message: 'Username must contain only letters or numbers',
-      })
-      .min(6, { message: 'Username must be at least 6 characters long' })
-      .max(20, { message: 'Username must be at most 20 characters long' }),
-    password: z
-      .string({
-        required_error: 'Password is required',
-      })
-      .min(8, { message: 'Password must be at least 8 characters long' })
-      .max(20, { message: 'Password must be at most 20 characters long' }),
-    reEnterPassword: z
-      .string({
-        required_error: 'Password is required',
-      })
-      .min(8, { message: 'Password must be at least 8 characters long' })
-      .max(20, { message: 'Password must be at most 20 characters long' }),
-  })
-  .superRefine(({ password, reEnterPassword }, ctx) => {
-    if (password !== reEnterPassword) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'The passwords did not match',
-        path: ['reEnterPassword'],
-      })
-    }
-  })
-
-export const validator = zValidator('form', schema, (result, c) => {
-  if (!result.success) {
-    return c.text(result.error.issues[0].message, 400)
-  }
-  return
-})
+function generateSchemaWithTranslations(c: Context) {
+  const t = c.get
+  return z
+    .object({
+      username: z
+        .string({
+          required_error: 'Username is required',
+        })
+        .regex(/^[A-Za-z0-9_-]+$/, {
+          message: 'Username must contain only letters or numbers',
+        })
+        .min(6, { message: t('username_must_be_at_least_6_characters_long') })
+        .max(20, { message: t('username_must_be_at_most_20_characters_long') }),
+      password: z
+        .string({
+          required_error: t('password_is_required'),
+        })
+        .min(8, { message: t('password_must_be_at_least_8_characters_long') })
+        .max(20, { message: t('password_must_be_at_most_20_characters_long') }),
+      reEnterPassword: z
+        .string({
+          required_error: t('re_enter_password_is_required'),
+        })
+        .min(8, { message: t('password_must_be_at_least_8_characters_long') })
+        .max(20, { message: t('password_must_be_at_most_20_characters_long') }),
+    })
+    .superRefine(({ password, reEnterPassword }, ctx) => {
+      if (password !== reEnterPassword) {
+        ctx.addIssue({
+          code: 'custom',
+          message: t('the_passwords_did_not_match'),
+          path: ['reEnterPassword'],
+        })
+      }
+    })
+}
 
 export default async (c: Context) => {
-  const knex = c.get('knex')
   const formData = await c.req.formData()
   const username = formData.get('username') as string
   const password = formData.get('password') as string
 
+  const result = await generateSchemaWithTranslations(c).safeParseAsync({
+    username,
+    password,
+    reEnterPassword: formData.get('reEnterPassword'),
+  })
+
+  if (!result.success) {
+    return c.text(result.error.issues[0].message, 400)
+  }
+
+  if (!knex) {
+    throw new Error('knex is not defined')
+  }
+
   const user = await knex('logins').where('username', username).first()
 
+  const t = c.get('t')
+
   if (user) {
-    return c.text('User already exists', 409)
+    return c.text(t('user_already_exists'), 409)
   }
 
   const hash = hashSync(password, 10)
@@ -65,7 +76,10 @@ export default async (c: Context) => {
 
   //register successful
 
-  const secret = c.get('secret')
+  const secret = process.env.SECRET
+  if (!secret) {
+    throw new Error('SECRET environment variable is required')
+  }
   const expires = new Date(Date.now() + 1000 * 60 * 10)
   await setSignedCookie(c, 'session', `${username},${Date.now()}`, secret, {
     path: '/',
@@ -78,6 +92,6 @@ export default async (c: Context) => {
 
   c.res.headers.set('HX-Redirect', '/todos')
 
-  const todos = await knex('todos').where('user_id', user.id)
-  return c.body(todos`${renderTodos(todos)}`)
+  const userTodos = await knex('todos').where('user_id', user.id)
+  return c.body(todos.bind(c)`${renderTodos.bind(c)(userTodos)}`)
 }

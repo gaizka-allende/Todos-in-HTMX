@@ -1,11 +1,15 @@
 import { Context } from 'hono'
 
+import knex from '../../utils/database'
 import html from '../../utils/html'
 
 export default async (c: Context) => {
   const title = c.req.query('title')?.toLocaleLowerCase() as string
 
-  const knex = c.get('knex')
+  if (!knex) {
+    throw new Error('knex is not defined')
+  }
+
   const suggestions = (await knex('suggestions').where(
     'title',
     'like',

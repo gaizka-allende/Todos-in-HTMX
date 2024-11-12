@@ -3,11 +3,15 @@ import { formatISO } from 'date-fns'
 
 import { renderTodos } from '../../fragments/todo'
 import html from '../../utils/html'
+import knex from '../../utils/database'
 
 export default async (c: Context) => {
   const id = c.req.param('id')
 
-  const knex = c.get('knex')
+  if (!knex) {
+    throw new Error('knex is not defined')
+  }
+
   const todo = await knex('todos').where('id', id).first()
   await knex('todos')
     .where('id', id)
@@ -21,5 +25,5 @@ export default async (c: Context) => {
   const userTodos = await knex('todos')
     .where('user_id', todo.user_id)
     .orderBy('title')
-  return c.body(html`${renderTodos(userTodos)}`)
+  return c.body(html`${renderTodos.bind(c)(userTodos)}`)
 }
