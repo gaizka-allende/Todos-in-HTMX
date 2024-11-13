@@ -80,24 +80,19 @@ export default function document(
               end
             "
             >
-              <option value="">${t('select_a_language')}</option>
+              <option value="" selected hidden>
+                ${t('select_a_language')}
+              </option>
               <option value="en">${t('english')}</option>
               <option value="es">${t('spanish')}</option>
             </select>
           </div>
           <div>
-            <label for="theme">${t('select_a_theme')}:</label>
             <select
               name="theme"
               id="theme"
-              _="on load 
-                if localStorage.theme is not empty
-                  add @selected to <option/> when its value equals localStorage.theme
-                else if window.matchMedia('(prefers-color-scheme: dark)').matches
-                  add @selected to <option/> when its value equals 'system'
-                end
-            end
-            on change 
+              _="            
+              on change 
               if event.target.value equals 'dark' 
                 set @class of document.documentElement to 'dark' 
               else if event.target.value equals 'light'  
@@ -113,6 +108,7 @@ export default function document(
             end
             "
             >
+              <option value="" selected hidden>${t('select_a_theme')}</option>
               <option value="light">${t('light')}</option>
               <option value="dark">${t('dark')}</option>
               <option value="system">${t('system')}</option>
