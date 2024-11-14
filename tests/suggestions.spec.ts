@@ -13,7 +13,7 @@ test('redirects to /todos when already logged in and trying to browser /login', 
 
   await page.getByLabel(/password/i).pressSequentially('success_password')
 
-  await page.getByRole('button', { name: /submit/i }).click()
+  await page.getByRole('button', { name: /login/i }).click()
 
   await page.waitForSelector('text=Todo')
 

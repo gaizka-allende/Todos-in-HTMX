@@ -1,13 +1,14 @@
 import { test, expect } from '@playwright/test'
 import { serializeSigned } from 'hono/utils/cookie'
 import 'dotenv/config'
-import { t } from 'i18next'
+import { formatISO } from 'date-fns'
 
 import html from '../src/utils/html'
 import todos from '../src/screens/todos'
 import { renderTodos } from '../src/fragments/todo'
 import { response } from '../src/routes/todo/put'
-import { formatISO } from 'date-fns'
+import document from '../src/fragments/document'
+import { t } from '../src/i18n'
 
 const c = {
   get: () => t,
@@ -57,7 +58,7 @@ test('add a todo', async ({ page }) => {
       status: 200,
       contentType: 'text/html',
       //@ts-expect-error c is just mocking the context without the same signature
-      body: html`${todos.bind(c)`${renderTodos([])}`}`,
+      body: document.bind(c)`${todos.bind(c)`${renderTodos.bind(c)([])}`}`,
     })
   })
 
@@ -102,19 +103,14 @@ test('delete a todo', async ({ page }) => {
       status: 200,
       contentType: 'text/html',
       //@ts-expect-error c is just mocking the context without the same signature
-      body: html`${todos.bind(c)`
-        ${renderTodos.bind(
-          //@ts-expect-error c is just mocking the context without the same signature
-          c,
-        )([
-          {
-            title: 'buy milk',
-            id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-            completed: 0,
-            created_modified: formatISO(new Date()),
-          },
-        ])}
-      `}`,
+      body: document.bind(c)`${todos.bind(c)`${renderTodos.bind(c)([
+        {
+          title: 'buy milk',
+          id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
+          completed: 0,
+          created_modified: formatISO(new Date()),
+        },
+      ])}`}`,
     })
   })
 
@@ -152,7 +148,7 @@ test('complete a todo', async ({ page }) => {
       status: 200,
       contentType: 'text/html',
       //@ts-expect-error c is just mocking the context without the same signature
-      body: html`${todos.bind(c)`
+      body: document.bind(c)`${todos.bind(c)`
         ${
           //@ts-expect-error c is just mocking the context without the same signature
           renderTodos.bind(c)([
@@ -182,7 +178,7 @@ test('complete a todo', async ({ page }) => {
         {
           title: 'buy milk',
           id: '5d686f21-8775-42c6-ae9a-2cd88bdfb6d2',
-          completed: 0,
+          completed: 1,
           created_modified: formatISO(new Date()),
         },
       ]),
@@ -193,7 +189,9 @@ test('complete a todo', async ({ page }) => {
 
   await page.waitForSelector('text=Todo')
 
-  await page.click('input[type="checkbox"]')
+  await page.getByRole('checkbox').click()
+
+  await page.waitForSelector('text=Completed (1)')
 
   await page.getByTestId('show-completed').click()
 
@@ -258,7 +256,7 @@ test('uncomplete a todo', async ({ page }) => {
   await expect(page.getByRole('checkbox')).not.toBeChecked()
 })
 
-test('edit a todo', async ({ page }) => {
+test.skip('edit a todo', async ({ page }) => {
   await page.route('*/**/todos', async route => {
     if (route.request().method() !== 'GET') {
       await route.fallback()

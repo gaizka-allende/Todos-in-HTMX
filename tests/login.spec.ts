@@ -7,9 +7,9 @@ test('sucessful login', async ({ page }) => {
   //await page.getByLabel(/password/i).pressSequentially("success_password");
 
   //await expect(
-  //page.getByRole("button", { name: /submit/i })
+  //page.getByRole("button", { name: /login/i })
   //).not.toBeDisabled();
-  //await page.getByRole("button", { name: /submit/i }).click();
+  //await page.getByRole("button", { name: /login/i }).click();
 
   //await page.waitForSelector("text=Todo");
   await page.goto('http://localhost:3000')
@@ -20,7 +20,7 @@ test('sucessful login', async ({ page }) => {
 
   await page.getByLabel(/password/i).pressSequentially('success_password')
 
-  await page.getByRole('button', { name: /submit/i }).click()
+  await page.getByRole('button', { name: /login/i }).click()
 
   await page.waitForSelector('text=Todo')
 })
@@ -41,7 +41,7 @@ test('unsuccesful login', async ({ page }) => {
 
   await page.getByLabel(/password/i).pressSequentially('failed_password')
 
-  await page.getByRole('button', { name: /submit/i }).click()
+  await page.getByRole('button', { name: /login/i }).click()
 
   await page.waitForSelector('text=Invalid username or password')
 })
@@ -62,7 +62,7 @@ test('sucessful login second attempt', async ({ page }) => {
 
   await page.getByLabel(/password/i).pressSequentially('failed_password')
 
-  await page.getByRole('button', { name: /submit/i }).click()
+  await page.getByRole('button', { name: /login/i }).click()
 
   await page.waitForSelector('text=Invalid username or password')
 
@@ -79,7 +79,7 @@ test('sucessful login second attempt', async ({ page }) => {
   await page.getByLabel(/password/i).clear()
   await page.getByLabel(/password/i).pressSequentially('success_password')
 
-  await page.getByRole('button', { name: /submit/i }).click()
+  await page.getByRole('button', { name: /login/i }).click()
 
   await page.waitForSelector('text=Todo')
 })
@@ -96,9 +96,9 @@ test.skip('ensure button and input are disabled when submitting', async ({
   await page.getByLabel(/username/i).pressSequentially('sucess_login')
   await page.getByLabel(/password/i).pressSequentially('success_password')
 
-  await page.getByRole('button', { name: /submit/i }).click()
+  await page.getByRole('button', { name: /login/i }).click()
 
-  await expect(page.getByRole('button', { name: /submit/i })).toBeDisabled()
+  await expect(page.getByRole('button', { name: /login/i })).toBeDisabled()
 
   await page.waitForSelector('text=Todo')
 })
