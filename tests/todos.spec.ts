@@ -256,7 +256,7 @@ test('uncomplete a todo', async ({ page }) => {
   await expect(page.getByRole('checkbox')).not.toBeChecked()
 })
 
-test.skip('edit a todo', async ({ page }) => {
+test('edit a todo', async ({ page }) => {
   await page.route('*/**/todos', async route => {
     if (route.request().method() !== 'GET') {
       await route.fallback()
@@ -303,4 +303,8 @@ test.skip('edit a todo', async ({ page }) => {
   await page
     .locator('[name="5d686f21-8775-42c6-ae9a-2cd88bdfb6d2"]')
     .fill('buy chocolate')
+
+  await expect(
+    page.locator('[name="5d686f21-8775-42c6-ae9a-2cd88bdfb6d2"]'),
+  ).toHaveValue('buy chocolate')
 })
