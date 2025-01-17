@@ -37,10 +37,11 @@ export default function todos(
     <form
       hx-post="/todo"
       hx-target="#todos"
+      hx-swap="outerHTML swap:1s settle:1s"
       class="mb-4"
       hx-target-403="#error-add-todo"
       hx-on::before-request="document.querySelector('#title').value=''"
-    >
+   >
       <div class="mb-2 flex">
         <input
           _="on keyup 

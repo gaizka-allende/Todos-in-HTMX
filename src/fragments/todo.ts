@@ -46,6 +46,7 @@ export function renderTodo(
         name="checkbox"
         hx-patch="/todo/${id}"
         hx-target="#todos"
+        hx-swap="outerHTML"
         ${completed ? 'checked' : ''}
       />
       <input
@@ -68,6 +69,7 @@ export function renderTodo(
             class="font-medium py-1 px-4 my-1 rounded-lg text-lg border bg-gray-100 text-gray-600 mr-2"
             hx-delete="/todo/${id}"
             hx-target="#todos"
+            hx-swap="outerHTML"
           >
             ${t('todo_delete')}
           </button>`
